@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог товаров</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    let tg = window.Telegram.WebApp; // Получаем объект WebApp
+
+    document.querySelectorAll(".buy-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            let product = this.dataset.product;
+            let price = this.dataset.price;
+            
+            tg.sendData(JSON.stringify({ product, price })); // Отправляем данные в бот
+            tg.close(); // Закрываем мини-приложение после отправки
+        });
+    });
+</script>
+<body>
+    <button class="back-btn" onclick="goBack()">⬅️ Назад</button>
+
+    <h1>Каталог товаров</h1>
+    <div class="catalog">
+        <div class="product">
+            <img src="parka.jpg" alt="Парка">
+            <h2>Парка</h2>
+            <p>Теплая зимняя парка</p>
+            <span class="price">₽ 8 990</span>
+           <button class="buy-btn" data-product="Парка" data-price="8990">Купить</button>
+        </div>
+        <div class="product">
+            <img src="tshirt.jpg" alt="Футболка">
+            <h2>Футболка</h2>
+            <p>Качественная хлопковая футболка</p>
+            <span class="price">₽ 2 490</span>
+           <button class="buy-btn" data-product="Футболка" data-price="2490">Купить</button>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back(); // Возвращает пользователя назад
+        }
+    </script>
+</body>
+</html>
