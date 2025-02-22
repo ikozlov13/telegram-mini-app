@@ -7,58 +7,62 @@ const path = require('path');
 const app = express();
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json()); // Добавляем поддержку JSON-запросов
+app.use(express.json()); // РџРѕРґРґРµСЂР¶РєР° JSON-Р·Р°РїСЂРѕСЃРѕРІ
 
-// Главная страница
+// Р“Р»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Запускаем сервер
+// Р—Р°РїСѓСЃРєР°РµРј СЃРµСЂРІРµСЂ
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-   console.log(`Сервер запущен на порту ${PORT}`);
+   console.log(Buffer.from("Server is running on port" + PORT, "utf-8").toString());
 });
 
-// Подключаем Telegram Bot API
+// РџРѕРґРєР»СЋС‡Р°РµРј Telegram Bot API
 const token = process.env.TELEGRAM_BOT_TOKEN;
+console.log("TELEGRAM_BOT_TOKEN:", token); // Р’С‹РІРѕРґРёРј С‚РѕРєРµРЅ РІ РєРѕРЅСЃРѕР»СЊ
+
 if (!token) {
-    console.error("Ошибка: TELEGRAM_BOT_TOKEN не найден. Укажите его в файле .env");
+    console.error("РћС€РёР±РєР°: TELEGRAM_BOT_TOKEN РЅРµ РЅР°Р№РґРµРЅ. РЈРєР°Р¶РёС‚Рµ РµРіРѕ РІ С„Р°Р№Р»Рµ .env");
     process.exit(1);
 }
+
 const bot = new TelegramBot(token, { polling: true });
 
-// Команда /start для бота
+// РљРѕРјР°РЅРґР° /start РґР»СЏ Р±РѕС‚Р°
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
 
-    bot.sendMessage(chatId, "Нажмите кнопку ниже, чтобы открыть Mini App", {
+    bot.sendMessage(chatId, "РќР°Р¶РјРёС‚Рµ РєРЅРѕРїРєСѓ РЅРёР¶Рµ, С‡С‚РѕР±С‹ РѕС‚РєСЂС‹С‚СЊ Mini App", {
         reply_markup: {
             inline_keyboard: [
-                [{ text: "Открыть Mini App", web_app: { url: "https://telegram-mini-app.onrender.com" } }]
+                [{ text: "РћС‚РєСЂС‹С‚СЊ Mini App", web_app: { url: "https://telegram-mini-app.onrender.com" } }]
             ]
         }
     });
 });
 
-// Обработка данных от Mini App
+// РћР±СЂР°Р±РѕС‚РєР° РґР°РЅРЅС‹С… РѕС‚ Mini App
 app.post('/webapp-data', (req, res) => {
     const { chat_id, data } = req.body;
 
     if (chat_id && data === "start_pressed") {
-        bot.sendMessage(chat_id, "Вы нажали кнопку Старт в Mini App!");
+        bot.sendMessage(chat_id, "Р’С‹ РЅР°Р¶Р°Р»Рё РєРЅРѕРїРєСѓ РЎС‚Р°СЂС‚ РІ Mini App!");
     }
 
     res.sendStatus(200);
 });
 
+// Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РѕР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёР№
 bot.on("message", (msg) => {
     if (msg?.web_app_data?.data) {
         const chatId = msg.chat.id;
         const data = msg.web_app_data.data;
 
         if (data === "start_pressed") {
-            bot.sendMessage(chatId, "Вы нажали кнопку Старт в Mini App!");
+            bot.sendMessage(chatId, "Р’С‹ РЅР°Р¶Р°Р»Рё РєРЅРѕРїРєСѓ РЎС‚Р°СЂС‚ РІ Mini App!");
         }
     }
 });
