@@ -10,39 +10,52 @@
             text-align: center;
             font-family: Arial, sans-serif;
             padding: 20px;
-            background-color: #f9f9f9;
-        }
-        h1 {
-            color: #333;
+            background-color: #1a1a1a; /* Темный фон */
+            color: #fff; /* Белый текст */
+            margin: 0;
         }
         .category {
-            border: 1px solid #ddd;
+            border: 1px solid #444;
             padding: 20px;
             margin: 10px;
             border-radius: 10px;
-            background-color: #fff;
+            background-color: #2a2a2a; /* Темный фон для категорий */
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
         }
         .category:hover {
-            background-color: #f1f1f1;
+            transform: scale(1.05); /* Увеличение при наведении */
+            background-color: #3a3a3a;
+        }
+        .category img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            border-radius: 10px;
         }
         .category h2 {
             margin: 0;
-            color: #555;
+            color: #fff;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <h1>Добро пожаловать в наш магазин!</h1>
     <div id="categories">
         <div class="category" onclick="openCategory('men')">
+            <img src="https://via.placeholder.com/100" alt="Мужская одежда">
             <h2>Мужская одежда</h2>
         </div>
         <div class="category" onclick="openCategory('women')">
+            <img src="https://via.placeholder.com/100" alt="Женская одежда">
             <h2>Женская одежда</h2>
         </div>
         <div class="category" onclick="openCategory('home')">
+            <img src="https://via.placeholder.com/100" alt="Домашний текстиль">
             <h2>Домашний текстиль</h2>
         </div>
     </div>
