@@ -1,25 +1,33 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const TelegramBot = require('node-telegram-bot-api');
+const path = require('path');
 
 const app = express();
-app.use(cors()); // Разрешаем доступ из Telegram Mini App
-app.use(express.static('public')); // Открываем папку public
+app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Главная страница (отдаёт index.html)
+// Главная страница
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Запускаем сервер на порту 3000
+// Запускаем сервер
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
 
-const TelegramBot = require('node-telegram-bot-api');
-const token = 8040346486:AAFHLxeHFlzmFFs0nNPr2JVbmgsk9XgotJo;
+// Подключаем Telegram Bot API
+const token = process.env.TELEGRAM_BOT_TOKEN;
+if (!token) {
+    console.error("Ошибка: TELEGRAM_BOT_TOKEN не найден. Укажите его в файле .env");
+    process.exit(1);
+}
 const bot = new TelegramBot(token, { polling: true });
 
+// Команда /start для бота
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
 
@@ -32,9 +40,14 @@ bot.onText(/\/start/, (msg) => {
     });
 });
 
-<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="samplebot" data-size="large" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
-<script type="text/javascript">
-  function onTelegramAuth(user) {
-    alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
-  }
-</script>
+// Обработка данных от Mini App
+bot.on("message", (msg) => {
+    if (msg?.web_app_data?.data) {
+        const chatId = msg.chat.id;
+        const data = msg.web_app_data.data;
+
+        if (data === "start_pressed") {
+            bot.sendMessage(chatId, "Вы нажали кнопку Старт в Mini App!");
+        }
+    }
+});
