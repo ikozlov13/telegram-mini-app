@@ -7,6 +7,7 @@ const path = require('path');
 const app = express();
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json()); // Добавляем поддержку JSON-запросов
 
 // Главная страница
 app.get('/', (req, res) => {
@@ -16,7 +17,7 @@ app.get('/', (req, res) => {
 // Запускаем сервер
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Сервер запущен на порту ${PORT}`);
+   console.log(`Сервер запущен на порту ${PORT}`);
 });
 
 // Подключаем Telegram Bot API
@@ -41,6 +42,16 @@ bot.onText(/\/start/, (msg) => {
 });
 
 // Обработка данных от Mini App
+app.post('/webapp-data', (req, res) => {
+    const { chat_id, data } = req.body;
+
+    if (chat_id && data === "start_pressed") {
+        bot.sendMessage(chat_id, "Вы нажали кнопку Старт в Mini App!");
+    }
+
+    res.sendStatus(200);
+});
+
 bot.on("message", (msg) => {
     if (msg?.web_app_data?.data) {
         const chatId = msg.chat.id;
