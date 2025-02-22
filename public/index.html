@@ -27,9 +27,10 @@
 
     <script>
         Telegram.WebApp.ready();
+        console.log('Telegram WebApp SDK загружен');
 
         function openCategory(category) {
-            Telegram.WebApp.showAlert(`Вы выбрали категорию: ${category}`);
+            console.log(`Выбрана категория: ${category}`);
             window.location.href = `products.html?category=${category}`;
         }
     </script>
