@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://telegram.org; style-src 'self'; img-src 'self' data:;">
+    <title>Корзина</title>
+    <link rel="stylesheet" href="styles.css?v=1.0.1">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="cart.js"></script>
+</head>
+<body>
+    <h1>Корзина</h1>
+    <div id="cart-container">
+        <!-- Сюда будут добавлены товары -->
+    </div>
+    <button onclick="checkout()">Оформить заказ</button>
+    <a href="index.html">Вернуться к покупкам</a>
+
+    <script>
+        // Функция для оформления заказа
+        function checkout() {
+            Telegram.WebApp.CloudStorage.getItem('cart', (err, data) => {
+                if (!data) {
+                    Telegram.WebApp.showAlert('Ваша корзина пуста!');
+                    return;
+                }
+
+                const cart = JSON.parse(data);
+                const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+                // Отправляем данные о заказе на сервер (пример)
+                Telegram.WebApp.sendData(JSON.stringify({ cart, total }));
+
+                // Очищаем корзину после оформления заказа
+                Telegram.WebApp.CloudStorage.removeItem('cart', (err) => {
+                    if (err) {
+                        console.error('Ошибка при очистке корзины:', err);
+                    } else {
+                        Telegram.WebApp.showAlert('Заказ оформлен!');
+                        displayCart(); // Обновляем отображение корзины
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

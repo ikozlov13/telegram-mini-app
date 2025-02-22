@@ -3,57 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://telegram.org; style-src 'self'; img-src 'self' data:;">
     <title>Главная страница</title>
-    <script async src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #1a1a1a; /* Темный фон */
-            color: #fff; /* Белый текст */
-            margin: 0;
-        }
-        .category {
-            border: 1px solid #444;
-            padding: 20px;
-            margin: 10px;
-            border-radius: 10px;
-            background-color: #2a2a2a; /* Темный фон для категорий */
-            cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-            display: inline-block;
-            width: 30%; /* Ширина категории */
-            box-sizing: border-box;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Тень */
-        }
-        .category:hover {
-            transform: scale(1.05); /* Увеличение при наведении */
-            background-color: #3a3a3a;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Увеличенная тень при наведении */
-        }
-        .category img {
-            width: 100%; /* Ширина изображения на всю ширину блока */
-            height: 150px; /* Фиксированная высота */
-            object-fit: cover; /* Сохраняет пропорции и обрезает изображение */
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        .category h2 {
-            margin: 0;
-            color: #fff;
-            font-size: 18px;
-        }
-        @media (max-width: 768px) {
-            .category {
-                width: 100%; /* На мобильных категории занимают всю ширину */
-                margin: 10px 0; /* Уменьшаем отступы */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css?v=1.0.1">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div id="categories">
+    <h1>Каталог товаров</h1>
+    <div class="categories">
         <div class="category" onclick="openCategory('men')">
             <img src="images/men.jpg" alt="Мужская одежда">
             <h2>Мужская одежда</h2>
@@ -69,8 +26,10 @@
     </div>
 
     <script>
+        Telegram.WebApp.ready();
+
         function openCategory(category) {
-            // Переход на страницу товаров с параметром категории
+            Telegram.WebApp.showAlert(`Вы выбрали категорию: ${category}`);
             window.location.href = `products.html?category=${category}`;
         }
     </script>

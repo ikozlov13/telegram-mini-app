@@ -1,17 +1,23 @@
+/* Основные стили для body */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 0;
-    padding: 0;
-    background-color: #f8f8f8;
+    padding: 20px;
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a); /* Градиентный фон */
+    color: #fff; /* Белый текст */
 }
 
+/* Заголовок страницы */
 h1 {
     margin-top: 20px;
-    font-size: 24px;
+    font-size: 28px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.catalog {
+/* Контейнер для категорий */
+.categories {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -19,61 +25,136 @@ h1 {
     padding: 20px;
 }
 
-.product {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    width: 200px;
+/* Стили для карточки категории */
+.category {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 20px;
+    width: 30%; /* Ширина карточки на десктопе */
     text-align: center;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
+/* Эффект при наведении на карточку */
+.category:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Стили для изображения в карточке */
+.category img {
+    width: 100%;
+    height: 200px; /* Высота изображений на главной странице */
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Название категории */
+.category h2 {
+    margin: 15px 0 10px;
+    font-size: 18px;
+    color: #fff;
+}
+
+/* Стили для товаров */
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Стили для карточки товара */
+.product {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 20px;
+    width: 250px; /* Ширина карточки */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+/* Эффект при наведении на карточку товара */
 .product:hover {
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
+/* Стили для изображения в карточке товара */
 .product img {
     width: 100%;
-    height: 200px; /* Фиксированная высота */
-    object-fit: cover; /* Обрезает изображение, сохраняя пропорции */
+    height: 150px; /* Уменьшаем высоту до 150px */
+    object-fit: cover;
     border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Тень */
+    transition: filter 0.3s ease, transform 0.3s ease; /* Плавный переход */
 }
 
-.price {
+/* Эффект при наведении на изображение */
+.product:hover img {
+    filter: brightness(0.8); /* Затемнение при наведении */
+    transform: scale(1.05); /* Увеличение при наведении */
+}
+
+/* Название товара */
+.product h2 {
+    margin: 15px 0 10px;
+    font-size: 20px;
+    color: #fff;
+}
+
+/* Описание товара */
+.product p {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
+}
+
+/* Цена товара */
+.product .price {
     font-size: 18px;
-    font-weight: bold;
-    color: #e63946;
+    color: #fff;
+    margin: 10px 0;
 }
 
-button {
+/* Кнопка "Купить" */
+.product button {
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px;
-    width: 100%;
+    padding: 10px 20px;
+    margin-top: 15px;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 5px;
     font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
+/* Эффект при наведении на кнопку */
+.product button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-/* Адаптация для телефонов */
+/* Адаптация для мобильных устройств */
 @media (max-width: 600px) {
-    .catalog {
+    .categories, .products {
         flex-direction: column;
         align-items: center;
     }
 
-    .product {
-        width: 90%;
+    .category, .product {
+        width: 90%; /* Ширина карточки на мобильных */
     }
 
     h1 {
-        font-size: 20px;
+        font-size: 24px;
     }
 }
