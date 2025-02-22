@@ -38,7 +38,7 @@ bot.onText(/\/start/, (msg) => {
     bot.sendMessage(chatId, "Нажмите кнопку ниже, чтобы открыть Mini App", {
         reply_markup: {
             inline_keyboard: [
-                [{ text: "Открыть Mini App", web_app: { url: "https://telegram-mini-app.onrender.com" } }]
+                [{ text: "Открыть Mini App", web_app: { url: "https://telegram-mini-app-zog6.onrender.com/" } }]
             ]
         }
     });
