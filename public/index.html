@@ -10,27 +10,52 @@
             text-align: center;
             font-family: Arial, sans-serif;
         }
+        .product {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: left;
+        }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin-top: 20px;
+            padding: 5px 10px;
+            font-size: 14px;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Добро пожаловать!</h1>
-    <button onclick="window.Telegram.WebApp.expand();">Открыть Mini App</button>
-    <button id="startButton">Старт</button>
+    <h1>Каталог товаров</h1>
+    <div id="products"></div>
 
     <script>
-        document.getElementById("startButton").addEventListener("click", function() {
-            // Отправляем данные в Telegram Mini App
-            if (window.Telegram?.WebApp) {
-                window.Telegram.WebApp.sendData(JSON.stringify({ action: "start_pressed" }));
-            }
-            alert("Кнопка Старт нажата!");
+        const products = [
+            { id: 1, name: "Футболка", price: "1500 руб." },
+            { id: 2, name: "Худи", price: "3000 руб." },
+            { id: 3, name: "Кепка", price: "1200 руб." }
+        ];
+
+        const productsContainer = document.getElementById("products");
+
+        products.forEach(product => {
+            const productElement = document.createElement("div");
+            productElement.className = "product";
+            productElement.innerHTML = `
+                <h3>${product.name}</h3>
+                <p>Цена: ${product.price}</p>
+                <button onclick="orderProduct(${product.id})">Заказать</button>
+            `;
+            productsContainer.appendChild(productElement);
         });
+
+        function orderProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if (window.Telegram?.WebApp) {
+                window.Telegram.WebApp.sendData(JSON.stringify({ action: "order", product: product.name }));
+            }
+            alert(`Вы заказали: ${product.name}`);
+        }
     </script>
 </body>
 </html>
