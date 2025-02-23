@@ -79,6 +79,16 @@ function loadProducts() {
             addToCart(name, price, image, button);
         });
     });
+
+    // Привязка события для кнопки корзины
+    document.getElementById('cart-button').addEventListener('click', () => {
+        window.location.href = 'cart.html';
+    });
+
+    // Привязка события для кнопки "Назад"
+    document.getElementById('back-button').addEventListener('click', () => {
+        window.history.back();
+    });
 }
 
 // Загружаем товары при загрузке страницы

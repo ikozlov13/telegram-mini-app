@@ -20,4 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('home-category').addEventListener('click', () => {
         openCategory('home');
     });
+
+    // Привязка события для кнопки корзины
+    document.getElementById('cart-button').addEventListener('click', () => {
+        window.location.href = 'cart.html';
+    });
 });

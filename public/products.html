@@ -7,14 +7,15 @@
     <title>Товары</title>
     <link rel="stylesheet" href="styles.css?v=1.0.1">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="cart.js"></script>
     <script src="products.js"></script>
 </head>
 <body>
     <div class="cart-button-container">
-        <button class="cart-button" onclick="window.location.href='cart.html'">
+        <button class="cart-button" id="cart-button">
             🛒 Корзина
         </button>
-        <button class="back-button" onclick="window.history.back()">
+        <button class="back-button" id="back-button">
             ↩️ Назад
         </button>
     </div>
@@ -22,6 +23,5 @@
     <div class="products" id="products-container">
         <!-- Товары будут добавлены с помощью JavaScript -->
     </div>
-    <script src="cart.js"></script>
 </body>
 </html>
