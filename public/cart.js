@@ -40,6 +40,7 @@ function addToCart(name, price, image, button) {
                         button.onclick = () => {
                             window.location.href = 'cart.html';
                         };
+                        button.style.backgroundColor = '#28a745'; // Зелёный цвет для кнопки
                     }
                 }
             });
@@ -64,6 +65,7 @@ function addToCart(name, price, image, button) {
             button.onclick = () => {
                 window.location.href = 'cart.html';
             };
+            button.style.backgroundColor = '#28a745'; // Зелёный цвет для кнопки
         }
     }
 }
