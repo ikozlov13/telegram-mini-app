@@ -1,7 +1,25 @@
-// Функция для получения параметра из URL
-function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
+// Функция для добавления товара в корзину
+function addToCart(name, price, image, button) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    const existingItem = cart.find(item => item.name === name);
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ name, price, image, quantity: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert(`${name} добавлен в корзину!`);
+
+    // Меняем текст кнопки
+    if (button) {
+        button.textContent = 'Перейти в корзину';
+        button.onclick = () => {
+            window.location.href = 'cart.html';
+        };
+        button.style.backgroundColor = '#28a745'; // Зелёный цвет для кнопки
+    }
 }
 
 // Функция для загрузки товаров

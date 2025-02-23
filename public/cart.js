@@ -4,31 +4,14 @@ Telegram.WebApp.ready();
 // Функция для отображения корзины
 function displayCart() {
     const cartContainer = document.getElementById('cart-container');
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    if (Telegram.WebApp && Telegram.WebApp.CloudStorage) {
-        Telegram.WebApp.CloudStorage.getItem('cart', (err, data) => {
-            if (err) {
-                console.error('Ошибка при получении корзины:', err);
-                return;
-            }
-
-            if (!data) {
-                cartContainer.innerHTML = '<p>Ваша корзина пуста.</p>';
-                return;
-            }
-
-            const cart = JSON.parse(data);
-            renderCart(cart);
-        });
-    } else {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        if (cart.length === 0) {
-            cartContainer.innerHTML = '<p>Ваша корзина пуста.</p>';
-            return;
-        }
-
-        renderCart(cart);
+    if (cart.length === 0) {
+        cartContainer.innerHTML = '<p>Ваша корзина пуста.</p>';
+        return;
     }
+
+    renderCart(cart);
 }
 
 // Функция для отрисовки корзины
@@ -62,125 +45,42 @@ function renderCart(cart) {
 
 // Функция для изменения количества товара
 function changeQuantity(index, delta) {
-    if (Telegram.WebApp && Telegram.WebApp.CloudStorage) {
-        Telegram.WebApp.CloudStorage.getItem('cart', (err, data) => {
-            if (err) {
-                console.error('Ошибка при получении корзины:', err);
-                return;
-            }
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-            let cart = [];
-            if (data) {
-                cart = JSON.parse(data);
-            }
+    if (cart[index]) {
+        cart[index].quantity += delta;
 
-            if (cart[index]) {
-                cart[index].quantity += delta;
-
-                // Если количество стало меньше 1, удаляем товар
-                if (cart[index].quantity < 1) {
-                    cart.splice(index, 1);
-                }
-
-                Telegram.WebApp.CloudStorage.setItem('cart', JSON.stringify(cart), (err) => {
-                    if (err) {
-                        console.error('Ошибка при сохранении корзины:', err);
-                    } else {
-                        displayCart(); // Обновляем отображение корзины
-                    }
-                });
-            }
-        });
-    } else {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        if (cart[index]) {
-            cart[index].quantity += delta;
-
-            // Если количество стало меньше 1, удаляем товар
-            if (cart[index].quantity < 1) {
-                cart.splice(index, 1);
-            }
-
-            localStorage.setItem('cart', JSON.stringify(cart));
-            displayCart(); // Обновляем отображение корзины
+        // Если количество стало меньше 1, удаляем товар
+        if (cart[index].quantity < 1) {
+            cart.splice(index, 1);
         }
-    }
-}
 
-// Функция для удаления товара из корзины
-function removeFromCart(index) {
-    if (Telegram.WebApp && Telegram.WebApp.CloudStorage) {
-        Telegram.WebApp.CloudStorage.getItem('cart', (err, data) => {
-            if (err) {
-                console.error('Ошибка при получении корзины:', err);
-                return;
-            }
-
-            let cart = [];
-            if (data) {
-                cart = JSON.parse(data);
-            }
-
-            cart.splice(index, 1); // Удаляем товар по индексу
-
-            Telegram.WebApp.CloudStorage.setItem('cart', JSON.stringify(cart), (err) => {
-                if (err) {
-                    console.error('Ошибка при сохранении корзины:', err);
-                } else {
-                    displayCart(); // Обновляем отображение корзины
-                }
-            });
-        });
-    } else {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cart.splice(index, 1); // Удаляем товар по индексу
         localStorage.setItem('cart', JSON.stringify(cart));
         displayCart(); // Обновляем отображение корзины
     }
 }
 
+// Функция для удаления товара из корзины
+function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1); // Удаляем товар по индексу
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayCart(); // Обновляем отображение корзины
+}
+
 // Функция для оформления заказа
 function checkout() {
-    if (Telegram.WebApp && Telegram.WebApp.CloudStorage) {
-        Telegram.WebApp.CloudStorage.getItem('cart', (err, data) => {
-            if (err) {
-                console.error('Ошибка при получении корзины:', err);
-                return;
-            }
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-            if (!data) {
-                Telegram.WebApp.showAlert('Ваша корзина пуста!');
-                return;
-            }
-
-            const cart = JSON.parse(data);
-            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-            // Отправляем данные о заказе в Telegram
-            Telegram.WebApp.sendData(JSON.stringify({ cart, total }));
-
-            // Очищаем корзину после оформления заказа
-            Telegram.WebApp.CloudStorage.removeItem('cart', (err) => {
-                if (err) {
-                    console.error('Ошибка при очистке корзины:', err);
-                } else {
-                    Telegram.WebApp.showAlert('Заказ оформлен!');
-                    displayCart(); // Обновляем отображение корзины
-                }
-            });
-        });
-    } else {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        if (cart.length === 0) {
-            alert('Ваша корзина пуста!');
-            return;
-        }
-
-        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        alert(`Заказ оформлен! Общая сумма: ${total} руб.`);
-        localStorage.removeItem('cart');
-        displayCart(); // Обновляем отображение корзины
+    if (cart.length === 0) {
+        alert('Ваша корзина пуста!');
+        return;
     }
+
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    alert(`Заказ оформлен! Общая сумма: ${total} руб.`);
+    localStorage.removeItem('cart');
+    displayCart(); // Обновляем отображение корзины
 }
 
 // Привязка событий после загрузки страницы
