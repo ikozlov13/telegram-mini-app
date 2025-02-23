@@ -10,39 +10,15 @@
     <script src="cart.js"></script>
 </head>
 <body>
+    <div class="cart-button-container">
+        <button class="cart-button" onclick="window.location.href='index.html'">
+            🏠 На главную
+        </button>
+    </div>
     <h1>Корзина</h1>
     <div id="cart-container">
         <!-- Сюда будут добавлены товары -->
     </div>
     <button onclick="checkout()">Оформить заказ</button>
-    <a href="index.html">Вернуться к покупкам</a>
-
-    <script>
-        // Функция для оформления заказа
-        function checkout() {
-            Telegram.WebApp.CloudStorage.getItem('cart', (err, data) => {
-                if (!data) {
-                    Telegram.WebApp.showAlert('Ваша корзина пуста!');
-                    return;
-                }
-
-                const cart = JSON.parse(data);
-                const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-                // Отправляем данные о заказе на сервер (пример)
-                Telegram.WebApp.sendData(JSON.stringify({ cart, total }));
-
-                // Очищаем корзину после оформления заказа
-                Telegram.WebApp.CloudStorage.removeItem('cart', (err) => {
-                    if (err) {
-                        console.error('Ошибка при очистке корзины:', err);
-                    } else {
-                        Telegram.WebApp.showAlert('Заказ оформлен!');
-                        displayCart(); // Обновляем отображение корзины
-                    }
-                });
-            });
-        }
-    </script>
 </body>
 </html>

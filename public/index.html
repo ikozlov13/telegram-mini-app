@@ -7,9 +7,14 @@
     <title>Главная страница</title>
     <link rel="stylesheet" href="styles.css?v=1.0.1">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="index.js"></script> <!-- Подключаем отдельный JS-файл -->
+    <script src="index.js"></script>
 </head>
 <body>
+    <div class="cart-button-container">
+        <button class="cart-button" onclick="window.location.href='cart.html'">
+            🛒 Корзина
+        </button>
+    </div>
     <h1>Каталог товаров</h1>
     <div class="categories">
         <div class="category" id="men-category">
