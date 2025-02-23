@@ -168,3 +168,59 @@ h1 {
         width: 90%; /* Ширина карточки на мобильных */
     }
 }
+
+/* Стили для корзины */
+#cart-container {
+    padding: 20px;
+}
+
+.cart-item {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-item-details {
+    flex: 1;
+    text-align: left;
+}
+
+.cart-item-details h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.cart-item-details p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.cart-item-details button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.cart-item-details button:hover {
+    background-color: #c82333;
+}
