@@ -1,3 +1,9 @@
+// Функция для получения параметра из URL
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
 // Функция для добавления товара в корзину
 function addToCart(name, price, image, button) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -24,7 +30,7 @@ function addToCart(name, price, image, button) {
 
 // Функция для загрузки товаров
 function loadProducts() {
-    const category = getQueryParam('category');
+    const category = getQueryParam('category'); // Используем функцию getQueryParam
     const titleElement = document.getElementById('category-title');
     const productsContainer = document.getElementById('products-container');
 
