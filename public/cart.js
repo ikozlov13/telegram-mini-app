@@ -1,6 +1,75 @@
 // Инициализация Telegram WebApp
 Telegram.WebApp.ready();
 
+// Функция для добавления товара в корзину
+function addToCart(name, price, image, button) {
+    console.log('Функция addToCart вызвана:', name, price, image);
+
+    if (Telegram.WebApp && Telegram.WebApp.CloudStorage) {
+        console.log('CloudStorage доступен');
+
+        Telegram.WebApp.CloudStorage.getItem('cart', (err, data) => {
+            if (err) {
+                console.error('Ошибка при получении корзины:', err);
+                return;
+            }
+
+            let cart = [];
+            if (data) {
+                cart = JSON.parse(data);
+                console.log('Текущая корзина:', cart);
+            }
+
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, image, quantity: 1 });
+            }
+
+            Telegram.WebApp.CloudStorage.setItem('cart', JSON.stringify(cart), (err) => {
+                if (err) {
+                    console.error('Ошибка при сохранении корзины:', err);
+                } else {
+                    console.log('Корзина успешно обновлена:', cart);
+                    Telegram.WebApp.showAlert(`${name} добавлен в корзину!`);
+
+                    // Меняем текст и цвет кнопки
+                    if (button) {
+                        button.textContent = 'Перейти в корзину';
+                        button.style.backgroundColor = '#28a745'; // Зелёный цвет
+                        button.onclick = () => {
+                            window.location.href = 'cart.html';
+                        };
+                    }
+                }
+            });
+        });
+    } else {
+        console.error('CloudStorage недоступен');
+        // Альтернативная логика (например, сохранение в localStorage)
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingItem = cart.find(item => item.name === name);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ name, price, image, quantity: 1 });
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log('Корзина сохранена в localStorage:', cart);
+        alert(`${name} добавлен в корзину!`);
+
+        // Меняем текст и цвет кнопки
+        if (button) {
+            button.textContent = 'Перейти в корзину';
+            button.style.backgroundColor = '#28a745'; // Зелёный цвет
+            button.onclick = () => {
+                window.location.href = 'cart.html';
+            };
+        }
+    }
+}
+
 // Функция для отображения корзины
 function displayCart() {
     const cartContainer = document.getElementById('cart-container');
@@ -46,7 +115,7 @@ function renderCart(cart) {
                     <h3>${item.name}</h3>
                     <p>Цена: ${item.price} руб.</p>
                     <p>Количество: ${item.quantity}</p>
-                    <button onclick="removeFromCart(${index})">Удалить</button>
+                    <button class="remove-button" onclick="removeFromCart(${index})">Удалить</button>
                 </div>
             </div>
         `;
@@ -133,17 +202,26 @@ function checkout() {
 // Привязка событий после загрузки страницы
 document.addEventListener('DOMContentLoaded', () => {
     // Привязка события для кнопки "На главную"
-    document.getElementById('cart-button').addEventListener('click', () => {
-        window.location.href = 'index.html';
-    });
+    const cartButton = document.getElementById('cart-button');
+    if (cartButton) {
+        cartButton.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    }
 
     // Привязка события для кнопки "Назад"
-    document.getElementById('back-button').addEventListener('click', () => {
-        window.history.back();
-    });
+    const backButton = document.getElementById('back-button');
+    if (backButton) {
+        backButton.addEventListener('click', () => {
+            window.history.back();
+        });
+    }
 
     // Привязка события для кнопки "Оформить заказ"
-    document.getElementById('checkout-button').addEventListener('click', checkout);
+    const checkoutButton = document.getElementById('checkout-button');
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', checkout);
+    }
 
     // Загружаем корзину при открытии страницы
     displayCart();
