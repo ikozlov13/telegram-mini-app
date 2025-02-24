@@ -7,12 +7,19 @@ function getQueryParam(param) {
 // Функция для добавления товара в корзину
 function addToCart(name, price, image, button) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const productId = button.getAttribute('data-product-id');
 
-    const existingItem = cart.find(item => item.name === name);
+    const existingItem = cart.find(item => item.id === productId);
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        cart.push({ name, price, image, quantity: 1 });
+        cart.push({ 
+            id: productId,
+            name: name, 
+            price: price, 
+            image: image, 
+            quantity: 1 
+        });
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -21,11 +28,14 @@ function addToCart(name, price, image, button) {
     // Меняем текст кнопки
     if (button) {
         button.textContent = 'Перейти в корзину';
-        button.onclick = () => {
-            window.location.href = 'cart.html';
-        };
+        button.onclick = handleGoToCart;
         button.style.backgroundColor = '#28a745'; // Зелёный цвет для кнопки
     }
+}
+
+function handleGoToCart(event) {
+    event.preventDefault(); // Предотвращаем стандартное поведение
+    window.location.href = 'cart.html'; // Просто переходим в корзину
 }
 
 // Функция для загрузки товаров

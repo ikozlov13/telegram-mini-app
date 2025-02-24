@@ -33,7 +33,7 @@ function renderCart(cart) {
                         <span>${item.quantity}</span>
                         <button onclick="changeQuantity(${index}, 1)">+</button>
                     </div>
-                    <button class="remove-button" onclick="removeFromCart(${index})">Удалить</button>
+                    <button class="remove-button" onclick="removeFromCart(${item.id})">Удалить</button>
                 </div>
             </div>
         `;
@@ -46,26 +46,27 @@ function renderCart(cart) {
 // Функция для изменения количества товара
 function changeQuantity(index, delta) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
+    
     if (cart[index]) {
-        cart[index].quantity += delta;
-
-        // Если количество стало меньше 1, удаляем товар
-        if (cart[index].quantity < 1) {
+        const newQuantity = cart[index].quantity + delta;
+        
+        if (newQuantity <= 0) {
             cart.splice(index, 1);
+        } else {
+            cart[index].quantity = newQuantity;
         }
-
+        
         localStorage.setItem('cart', JSON.stringify(cart));
-        displayCart(); // Обновляем отображение корзины
+        displayCart();
     }
 }
 
 // Функция для удаления товара из корзины
-function removeFromCart(index) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.splice(index, 1); // Удаляем товар по индексу
+function removeFromCart(productId) {
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    cart = cart.filter(item => item.id !== productId);
     localStorage.setItem('cart', JSON.stringify(cart));
-    displayCart(); // Обновляем отображение корзины
+    displayCart();
 }
 
 // Функция для оформления заказа
