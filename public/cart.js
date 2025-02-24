@@ -23,17 +23,17 @@ function renderCart(cart) {
     cart.forEach((item, index) => {
         total += item.price * item.quantity;
         cartHTML += `
-            <div class="cart-item">
+            <div class="cart-item" data-index="${index}" data-product-id="${item.id}">
                 <img src="${item.image}" alt="${item.name}" class="cart-item-image">
                 <div class="cart-item-details">
                     <h3>${item.name}</h3>
                     <p>Цена: ${item.price} руб.</p>
                     <div class="quantity-controls">
-                        <button onclick="changeQuantity(${index}, -1)">-</button>
+                        <button class="quantity-minus">-</button>
                         <span>${item.quantity}</span>
-                        <button onclick="changeQuantity(${index}, 1)">+</button>
+                        <button class="quantity-plus">+</button>
                     </div>
-                    <button class="remove-button" onclick="removeFromCart(${item.id})">Удалить</button>
+                    <button class="remove-button">Удалить</button>
                 </div>
             </div>
         `;
@@ -41,6 +41,30 @@ function renderCart(cart) {
 
     cartHTML += `<h3>Общая сумма: ${total} руб.</h3>`;
     cartContainer.innerHTML = cartHTML;
+
+    // Добавляем обработчики событий после рендеринга
+    addCartEventListeners();
+}
+
+// Добавляем новую функцию для установки обработчиков событий
+function addCartEventListeners() {
+    const cartItems = document.querySelectorAll('.cart-item');
+    
+    cartItems.forEach(item => {
+        const index = parseInt(item.dataset.index);
+        const productId = item.dataset.productId;
+        
+        // Обработчик для кнопки удаления
+        const removeBtn = item.querySelector('.remove-button');
+        removeBtn.addEventListener('click', () => removeFromCart(productId));
+        
+        // Обработчики для кнопок +/-
+        const minusBtn = item.querySelector('.quantity-minus');
+        const plusBtn = item.querySelector('.quantity-plus');
+        
+        minusBtn.addEventListener('click', () => changeQuantity(index, -1));
+        plusBtn.addEventListener('click', () => changeQuantity(index, 1));
+    });
 }
 
 // Функция для изменения количества товара
