@@ -23,19 +23,24 @@ function addToCart(name, price, image, button) {
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
-    alert(`${name} добавлен в корзину!`);
-
-    // Меняем текст кнопки
-    if (button) {
+    
+    // Меняем текст кнопки и обработчик только один раз
+    if (button && button.textContent !== 'Перейти в корзину') {
         button.textContent = 'Перейти в корзину';
-        button.onclick = handleGoToCart;
-        button.style.backgroundColor = '#28a745'; // Зелёный цвет для кнопки
+        // Удаляем старые обработчики
+        button.replaceWith(button.cloneNode(true));
+        const newButton = document.querySelector(`[data-product-id="${productId}"]`);
+        newButton.addEventListener('click', handleGoToCart);
+        newButton.style.backgroundColor = '#28a745';
     }
 }
 
 function handleGoToCart(event) {
-    event.preventDefault(); // Предотвращаем стандартное поведение
-    window.location.href = 'cart.html'; // Просто переходим в корзину
+    if (event) {
+        event.preventDefault(); // Предотвращаем стандартное поведение
+        event.stopPropagation(); // Останавливаем всплытие события
+    }
+    window.location.href = 'cart.html';
 }
 
 // Функция для загрузки товаров
@@ -103,14 +108,26 @@ function loadProducts() {
         productsContainer.innerHTML = '<p>Товары для этой категории отсутствуют.</p>';
     }
 
-    // Привязка событий для кнопок "Купить"
+    // Изменяем привязку событий для кнопок "Купить"
     document.querySelectorAll('.product button').forEach(button => {
-        button.addEventListener('click', () => {
+        // Удаляем старые обработчики
+        button.replaceWith(button.cloneNode(true));
+    });
+    
+    // Добавляем новые обработчики
+    document.querySelectorAll('.product button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
             const product = button.closest('.product');
             const name = product.querySelector('h2').textContent;
             const price = parseFloat(product.querySelector('.price').textContent);
             const image = product.querySelector('img').src;
-            addToCart(name, price, image, button);
+            
+            if (button.textContent === 'Перейти в корзину') {
+                handleGoToCart(event);
+            } else {
+                addToCart(name, price, image, button);
+            }
         });
     });
 }
