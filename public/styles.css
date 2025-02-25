@@ -55,29 +55,34 @@ h1 {
 /* Контейнер для категорий */
 .categories {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
     gap: 20px;
     padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* Стили для карточки категории */
 .category {
-    background: #2a2a2a;
-    border: 1px solid #444;
+    background-color: #f8f9fa;
     border-radius: 10px;
     padding: 20px;
-    width: 30%; /* Ширина карточки на десктопе */
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Эффект при наведении на карточку */
 .category:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    background-color: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.category h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
 }
 
 /* Стили для товаров */

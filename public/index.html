@@ -16,15 +16,12 @@
     <h1>Каталог товаров</h1>
     <div class="categories">
         <div class="category" id="men-category">
-            <img src="/images/categories/men.jpg" alt="Мужская одежда">
             <h2>Мужская одежда</h2>
         </div>
         <div class="category" id="women-category">
-            <img src="/images/categories/women.jpg" alt="Женская одежда">
             <h2>Женская одежда</h2>
         </div>
         <div class="category" id="home-category">
-            <img src="/images/categories/home.jpg" alt="Домашний текстиль">
             <h2>Домашний текстиль</h2>
         </div>
     </div>
@@ -56,23 +53,7 @@
             if (typeof updateCartButton === 'function') {
                 updateCartButton();
             }
-
-            // Проверяем загрузку products.js
-            if (typeof products === 'undefined') {
-                console.error('products.js не загружен');
-            } else {
-                console.log('Доступные категории:', Object.keys(products));
-            }
         };
-
-        // Функция для возврата к категориям
-        function backToCategories() {
-            const productsContainer = document.getElementById('products-container');
-            const categoriesContainer = document.querySelector('.categories');
-            
-            if (productsContainer) productsContainer.innerHTML = '';
-            if (categoriesContainer) categoriesContainer.style.display = 'flex';
-        }
     </script>
 </body>
 </html>
