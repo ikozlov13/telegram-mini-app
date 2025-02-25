@@ -136,6 +136,7 @@ function loadProducts() {
 document.addEventListener('DOMContentLoaded', loadProducts);
 
 // Функция для оформления заказа
+// Отправляет данные в Telegram и очищает корзину
 function checkout() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     
