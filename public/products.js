@@ -78,6 +78,12 @@ const products = {
             ],
             composition: '100% Oxford'
         }
+    ],
+    men: [
+        // Добавьте товары мужской категории
+    ],
+    home: [
+        // Добавьте товары для дома
     ]
 };
 
@@ -219,6 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Функция загрузки товаров
 function loadProducts(category) {
+    console.log('Loading products for category:', category); // Отладочный вывод
+
     const productsContainer = document.getElementById('products-container');
     if (!productsContainer) {
         console.error('Контейнер для товаров не найден');
@@ -226,41 +234,51 @@ function loadProducts(category) {
     }
 
     const categoryProducts = products[category];
-    if (!categoryProducts) {
+    if (!categoryProducts || !Array.isArray(categoryProducts)) {
+        console.error('Товары не найдены для категории:', category);
         productsContainer.innerHTML = '<p>Товары не найдены</p>';
         return;
     }
 
     // Очищаем контейнер и скрываем категории
-    productsContainer.innerHTML = '';
     const categoriesContainer = document.querySelector('.categories');
     if (categoriesContainer) {
         categoriesContainer.style.display = 'none';
     }
 
     // Добавляем кнопку возврата к категориям
-    const backButton = document.createElement('button');
-    backButton.className = 'back-to-categories';
-    backButton.textContent = '← Назад к категориям';
-    backButton.onclick = () => {
-        productsContainer.innerHTML = '';
-        if (categoriesContainer) {
-            categoriesContainer.style.display = 'flex';
-        }
-    };
-    productsContainer.appendChild(backButton);
+    productsContainer.innerHTML = `
+        <button class="back-to-categories" onclick="backToCategories()">
+            ← Назад к категориям
+        </button>
+        <div class="products-grid"></div>
+    `;
 
-    // Создаем контейнер для товаров
-    const productsGrid = document.createElement('div');
-    productsGrid.className = 'products-grid';
+    const productsGrid = productsContainer.querySelector('.products-grid');
     
     // Добавляем товары
     categoryProducts.forEach(async product => {
-        const card = await createProductCard(product);
-        productsGrid.appendChild(card);
+        try {
+            const card = await createProductCard(product);
+            productsGrid.appendChild(card);
+        } catch (error) {
+            console.error('Ошибка при создании карточки товара:', error);
+        }
     });
+}
 
-    productsContainer.appendChild(productsGrid);
+// Функция возврата к категориям
+function backToCategories() {
+    const productsContainer = document.getElementById('products-container');
+    const categoriesContainer = document.querySelector('.categories');
+    
+    if (productsContainer) {
+        productsContainer.innerHTML = '';
+    }
+    
+    if (categoriesContainer) {
+        categoriesContainer.style.display = 'flex';
+    }
 }
 
 // Добавим функцию для поиска товара по ID

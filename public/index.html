@@ -44,13 +44,21 @@
                 });
             }
 
-            // Обработчик для категории
-            const womenCategory = document.getElementById('women-category');
-            if (womenCategory) {
-                womenCategory.addEventListener('click', () => {
-                    loadProducts('women');
-                });
-            }
+            // Обработчики для всех категорий
+            const categories = {
+                'men-category': 'men',
+                'women-category': 'women',
+                'home-category': 'home'
+            };
+
+            Object.entries(categories).forEach(([id, category]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('click', () => {
+                        loadProducts(category);
+                    });
+                }
+            });
 
             // Обновляем счетчик корзины
             updateCartButton();
