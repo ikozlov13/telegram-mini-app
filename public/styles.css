@@ -855,3 +855,13 @@ h1 {
 .back-to-categories:hover {
     background: #1976D2;
 }
+
+.category img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: #f0f0f0;
+    /* Добавляем градиент как временный фон */
+    background-image: linear-gradient(45deg, #f0f0f0 25%, #e0e0e0 25%, #e0e0e0 50%, #f0f0f0 50%, #f0f0f0 75%, #e0e0e0 75%, #e0e0e0 100%);
+    background-size: 56.57px 56.57px;
+}

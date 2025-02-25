@@ -80,12 +80,51 @@ const products = {
         }
     ],
     men: [
-        // Добавьте товары мужской категории
+        {
+            id: 'm-tshirt',
+            name: 'Футболка мужская',
+            description: 'Классическая футболка из хлопка',
+            price: 2999,
+            image: {
+                'Черный': 'images/men/tshirt/tshirt-black-1.jpg'
+            },
+            gallery: {
+                'Черный': [
+                    'images/men/tshirt/tshirt-black-1.jpg'
+                ]
+            },
+            sizes: ['S', 'M', 'L', 'XL'],
+            colors: [
+                { name: 'Черный', code: '#000000' }
+            ],
+            composition: '100% хлопок'
+        }
     ],
     home: [
-        // Добавьте товары для дома
+        {
+            id: 'h-towel',
+            name: 'Полотенце банное',
+            description: 'Мягкое махровое полотенце',
+            price: 1499,
+            image: {
+                'Белый': 'images/home/towel/towel-white-1.jpg'
+            },
+            gallery: {
+                'Белый': [
+                    'images/home/towel/towel-white-1.jpg'
+                ]
+            },
+            sizes: ['70x140'],
+            colors: [
+                { name: 'Белый', code: '#FFFFFF' }
+            ],
+            composition: '100% хлопок'
+        }
     ]
 };
+
+// Добавим проверку при загрузке
+console.log('Products loaded:', Object.keys(products));
 
 // Функция для получения параметра из URL
 function getQueryParam(param) {
@@ -225,46 +264,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Функция загрузки товаров
 function loadProducts(category) {
-    console.log('Loading products for category:', category); // Отладочный вывод
-
+    console.log('Загрузка товаров для категории:', category);
+    
     const productsContainer = document.getElementById('products-container');
+    const categoriesContainer = document.querySelector('.categories');
+
     if (!productsContainer) {
-        console.error('Контейнер для товаров не найден');
+        console.error('Контейнер products-container не найден');
         return;
     }
 
-    const categoryProducts = products[category];
-    if (!categoryProducts || !Array.isArray(categoryProducts)) {
+    if (!products || !products[category]) {
         console.error('Товары не найдены для категории:', category);
         productsContainer.innerHTML = '<p>Товары не найдены</p>';
         return;
     }
 
-    // Очищаем контейнер и скрываем категории
-    const categoriesContainer = document.querySelector('.categories');
-    if (categoriesContainer) {
-        categoriesContainer.style.display = 'none';
-    }
-
-    // Добавляем кнопку возврата к категориям
-    productsContainer.innerHTML = `
-        <button class="back-to-categories" onclick="backToCategories()">
-            ← Назад к категориям
-        </button>
-        <div class="products-grid"></div>
-    `;
-
-    const productsGrid = productsContainer.querySelector('.products-grid');
-    
-    // Добавляем товары
-    categoryProducts.forEach(async product => {
-        try {
-            const card = await createProductCard(product);
-            productsGrid.appendChild(card);
-        } catch (error) {
-            console.error('Ошибка при создании карточки товара:', error);
+    try {
+        // Скрываем категории
+        if (categoriesContainer) {
+            categoriesContainer.style.display = 'none';
         }
-    });
+
+        // Очищаем и заполняем контейнер товаров
+        productsContainer.innerHTML = `
+            <button class="back-to-categories" onclick="backToCategories()">
+                ← Назад к категориям
+            </button>
+            <div class="products-grid"></div>
+        `;
+
+        const productsGrid = productsContainer.querySelector('.products-grid');
+        
+        // Добавляем товары
+        products[category].forEach(product => {
+            const card = createProductCard(product);
+            productsGrid.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error('Ошибка при загрузке товаров:', error);
+        productsContainer.innerHTML = `
+            <div class="error-message">
+                <p>Произошла ошибка при загрузке товаров</p>
+                <button onclick="backToCategories()">Вернуться к категориям</button>
+            </div>
+        `;
+    }
 }
 
 // Функция возврата к категориям
