@@ -7,6 +7,7 @@ import os
 from dotenv import load_dotenv
 import asyncio
 import logging
+import signal
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -19,6 +20,14 @@ ADMIN_CHAT_ID = os.getenv('ADMIN_CHAT_ID')  # ID чата админа/груп�
 # Инициализация бота и диспетчера
 bot = Bot(token=TOKEN)
 dp = Dispatcher()  # Убираем параметр bot
+
+# Добавим обработчик сигналов
+def signal_handler(signum, frame):
+    logging.info("Received signal to stop bot")
+    raise KeyboardInterrupt
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
 
 # Регистрируем хендлеры
 @dp.message(Command('start'))
@@ -79,41 +88,48 @@ async def check_webhook():
 async def main():
     logging.info("Starting bot cleanup...")
     
-    # Принудительно закрываем все сессии
+    # Принудительно останавливаем все процессы бота
     try:
-        await bot.session.close()
-    except:
-        pass
+        # Удаляем webhook и все обновления
+        await bot.delete_webhook(drop_pending_updates=True)
+        
+        # Закрываем текущую сессию
+        if hasattr(bot, '_session') and bot._session:
+            await bot._session.close()
+        bot._session = None
+        
+        # Создаем новую сессию
+        await asyncio.sleep(3)  # Ждем 3 секунды
+        
+        # Очищаем все обновления
+        try:
+            await bot.get_updates(offset=-1, timeout=1, limit=1)
+        except:
+            pass
+            
+    except Exception as e:
+        logging.error(f"Error during cleanup: {e}")
     
-    # Пересоздаем сессию
-    bot._session = None
-    
-    logging.info("Checking webhook...")
-    await check_webhook()
-    
-    logging.info("Deleting webhook...")
-    await bot.delete_webhook(drop_pending_updates=True)
-    
-    logging.info("Clearing updates...")
-    try:
-        await bot.get_updates(offset=-1, timeout=1)
-    except:
-        pass
-    
-    logging.info("Starting polling...")
+    logging.info("Starting new bot session...")
     try:
         await dp.start_polling(
             bot,
             allowed_updates=dp.resolve_used_update_types(),
             skip_updates=True,
-            timeout=30
+            timeout=60,
+            reset_webhook=True,
+            polling_timeout=30
         )
-    finally:
-        logging.info("Closing bot session...")
-        await bot.session.close()
+    except Exception as e:
+        logging.error(f"Error during polling: {e}")
+        raise e
 
 if __name__ == '__main__':
     try:
         asyncio.run(main())
-    except (KeyboardInterrupt, SystemExit):
-        logging.info("Bot stopped!") 
+    except KeyboardInterrupt:
+        logging.info("Bot stopped by user!")
+    except Exception as e:
+        logging.error(f"Bot stopped with error: {e}")
+    finally:
+        logging.info("Bot shutdown complete") 
