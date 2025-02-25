@@ -747,3 +747,53 @@ h1 {
 .product-image.loading {
     filter: blur(10px);
 }
+
+/* Анимация добавления в корзину */
+@keyframes addToCartAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Анимация для иконки корзины */
+@keyframes cartBounce {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.2);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.add-to-cart-btn.adding {
+    animation: addToCartAnimation 0.3s ease-in-out;
+    background-color: #4CAF50 !important;
+}
+
+.cart-button.updating {
+    animation: cartBounce 0.5s ease-in-out;
+}
+
+/* Анимация летящего товара */
+.flying-item {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
