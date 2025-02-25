@@ -221,7 +221,7 @@ const products = {
             image: {
                 'Черный': 'images/women/tshirt/tshirt-black.jpg',
                 'Белый': 'images/women/tshirt/tshirt-white.jpg',
-                'Фуксия': 'images/women/tshirt/tshirt-fuchsia.jpg',
+                'Фуксия': 'images/women/tshirt/tshirt-fuchsia-1.jpg',
                 'Зеленый': 'images/women/tshirt/tshirt-green.jpg'
             },
             gallery: {
@@ -238,7 +238,10 @@ const products = {
                 'Фуксия': [
                     'images/women/tshirt/tshirt-fuchsia-1.jpg',
                     'images/women/tshirt/tshirt-fuchsia-2.jpg',
-                    'images/women/tshirt/tshirt-fuchsia-3.jpg'
+                    'images/women/tshirt/tshirt-fuchsia-3.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-4.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-5.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-6.jpg'
                 ],
                 'Зеленый': [
                     'images/women/tshirt/tshirt-green-1.jpg',
@@ -356,12 +359,29 @@ const products = {
         {
             id: 'w-robe-boho',
             name: 'Халат вафельный Бохо',
-            description: 'Стильный вафельный халат в стиле Бохо.',
+            description: 'Стильный вафельный халат в этническом стиле Бохо. Уникальный дизайн с традиционными элементами, мягкая и приятная к телу ткань. Идеально подходит для дома и спа-процедур.',
             price: 5499,
             image: {
                 'Белый': 'images/women/robe-boho/robe-white.jpg',
                 'Синий': 'images/women/robe-boho/robe-blue.jpg',
                 'Шоколад': 'images/women/robe-boho/robe-chocolate.jpg'
+            },
+            gallery: {
+                'Белый': [
+                    'images/women/robe-boho/robe-white-1.jpg',
+                    'images/women/robe-boho/robe-white-2.jpg',
+                    'images/women/robe-boho/robe-white-3.jpg'
+                ],
+                'Синий': [
+                    'images/women/robe-boho/robe-blue-1.jpg',
+                    'images/women/robe-boho/robe-blue-2.jpg',
+                    'images/women/robe-boho/robe-blue-3.jpg'
+                ],
+                'Шоколад': [
+                    'images/women/robe-boho/robe-chocolate-1.jpg',
+                    'images/women/robe-boho/robe-chocolate-2.jpg',
+                    'images/women/robe-boho/robe-chocolate-3.jpg'
+                ]
             },
             sizes: ['M-L', 'XL', 'XXL'],
             colors: [
@@ -374,10 +394,17 @@ const products = {
         {
             id: 'w-robe-linen',
             name: 'Халат Полулен в полоску',
-            description: 'Элегантный халат из смесовой ткани полулен.',
+            description: 'Элегантный халат из смесовой ткани полулен с классическим полосатым узором. Сочетание льна и хлопка обеспечивает комфорт и долговечность. Отлично подходит для повседневной носки.',
             price: 4999,
             image: {
                 'Бежевый': 'images/women/robe-linen/robe-linen-beige.jpg'
+            },
+            gallery: {
+                'Бежевый': [
+                    'images/women/robe-linen/robe-linen-beige-1.jpg',
+                    'images/women/robe-linen/robe-linen-beige-2.jpg',
+                    'images/women/robe-linen/robe-linen-beige-3.jpg'
+                ]
             },
             sizes: ['L', 'XL'],
             colors: [
@@ -388,10 +415,20 @@ const products = {
         {
             id: 'w-raincoat',
             name: 'Плащ-дождевик',
-            description: 'Практичный и стильный дождевик из ткани Oxford.',
+            description: 'Практичный и стильный дождевик из премиальной ткани Oxford. Надежная защита от дождя, продуманный крой с капюшоном и карманами. Легко складывается в компактную сумочку.',
             price: 4999,
             image: {
-                'Бежевый': 'images/women/raincoat/raincoat-beige.jpg'
+                'Бежевый': 'images/women/raincoat/raincoat-beige-1.JPG'
+            },
+            gallery: {
+                'Бежевый': [
+                    'images/women/raincoat/raincoat-beige-1.JPG',
+                    'images/women/raincoat/raincoat-beige-2.JPG',
+                    'images/women/raincoat/raincoat-beige-3.JPG',
+                    'images/women/raincoat/raincoat-beige-4.JPG',
+                    'images/women/raincoat/raincoat-beige-5.JPG',
+                    'images/women/raincoat/raincoat-beige-6.JPG'
+                ]
             },
             sizes: ['Оверсайз'],
             colors: [
@@ -404,12 +441,29 @@ const products = {
         {
             id: 'm-tshirt',
             name: 'Футболка мужская',
-            description: 'Классическая футболка из премиального хлопка.',
+            description: 'Классическая футболка из премиального хлопка. Идеальная посадка и комфорт в носке. Подходит как для повседневной носки, так и для занятий спортом.',
             price: 3499,
             image: {
                 'Черный': 'images/men/tshirt/tshirt-black.jpg',
                 'Белый': 'images/men/tshirt/tshirt-white.jpg',
                 'Зеленый': 'images/men/tshirt/tshirt-green.jpg'
+            },
+            gallery: {
+                'Черный': [
+                    'images/men/tshirt/tshirt-black-1.jpg',
+                    'images/men/tshirt/tshirt-black-2.jpg',
+                    'images/men/tshirt/tshirt-black-3.jpg'
+                ],
+                'Белый': [
+                    'images/men/tshirt/tshirt-white-1.jpg',
+                    'images/men/tshirt/tshirt-white-2.jpg',
+                    'images/men/tshirt/tshirt-white-3.jpg'
+                ],
+                'Зеленый': [
+                    'images/men/tshirt/tshirt-green-1.jpg',
+                    'images/men/tshirt/tshirt-green-2.jpg',
+                    'images/men/tshirt/tshirt-green-3.jpg'
+                ]
             },
             sizes: ['L', 'XL'],
             colors: [
@@ -422,12 +476,29 @@ const products = {
         {
             id: 'm-robe-boho',
             name: 'Халат вафельный Бохо',
-            description: 'Стильный вафельный халат в стиле Бохо.',
+            description: 'Стильный мужской халат в этническом стиле Бохо. Уникальный дизайн, отличная впитываемость и комфорт. Идеально подходит для дома, бани и спа.',
             price: 5499,
             image: {
                 'Белый': 'images/men/robe-boho/robe-white.jpg',
                 'Синий': 'images/men/robe-boho/robe-blue.jpg',
                 'Шоколад': 'images/men/robe-boho/robe-chocolate.jpg'
+            },
+            gallery: {
+                'Белый': [
+                    'images/men/robe-boho/robe-white-1.jpg',
+                    'images/men/robe-boho/robe-white-2.jpg',
+                    'images/men/robe-boho/robe-white-3.jpg'
+                ],
+                'Синий': [
+                    'images/men/robe-boho/robe-blue-1.jpg',
+                    'images/men/robe-boho/robe-blue-2.jpg',
+                    'images/men/robe-boho/robe-blue-3.jpg'
+                ],
+                'Шоколад': [
+                    'images/men/robe-boho/robe-chocolate-1.jpg',
+                    'images/men/robe-boho/robe-chocolate-2.jpg',
+                    'images/men/robe-boho/robe-chocolate-3.jpg'
+                ]
             },
             sizes: ['M-L', 'XL', 'XXL'],
             colors: [
@@ -442,7 +513,7 @@ const products = {
         {
             id: 'h-towels',
             name: 'Вафельные полотенца 2 шт',
-            description: 'Комплект из двух вафельных полотенец.',
+            description: 'Комплект из двух высококачественных вафельных полотенец. Отличная впитываемость и быстрое высыхание. Идеально подходят для кухни и ванной комнаты. Не теряют форму после стирки.',
             price: 650,
             image: {
                 'Белый': 'images/home/towels/towels-white.jpg'
@@ -456,7 +527,7 @@ const products = {
         {
             id: 'h-tablecloth',
             name: 'Скатерть Полулен',
-            description: 'Элегантная скатерть из смесовой ткани полулен.',
+            description: 'Элегантная скатерть из смесовой ткани полулен. Классический дизайн подходит для любого интерьера. Практичная в уходе, устойчива к загрязнениям. Прекрасно держит форму после стирки.',
             price: 4199,
             image: {
                 'Бежевый': 'images/home/tablecloth/tablecloth-beige.jpg'
@@ -470,7 +541,7 @@ const products = {
         {
             id: 'h-napkins',
             name: 'Салфетки сервировочные 6 шт',
-            description: 'Комплект из 6 льняных салфеток в подарочной упаковке.',
+            description: 'Комплект из 6 льняных салфеток премиального качества в подарочной упаковке. Идеальны для сервировки стола. Элегантный дизайн и натуральные материалы. Легко стираются и не требуют глажки.',
             price: 3599,
             image: {
                 'Белый': 'images/home/napkins/napkins-white.jpg'
