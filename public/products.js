@@ -267,50 +267,39 @@ function loadProducts(category) {
     console.log('Загрузка товаров для категории:', category);
     
     const productsContainer = document.getElementById('products-container');
-    const categoriesContainer = document.querySelector('.categories');
-
     if (!productsContainer) {
         console.error('Контейнер products-container не найден');
         return;
     }
 
-    if (!products || !products[category]) {
+    const categoryProducts = products[category];
+    if (!categoryProducts) {
         console.error('Товары не найдены для категории:', category);
         productsContainer.innerHTML = '<p>Товары не найдены</p>';
         return;
     }
 
-    try {
-        // Скрываем категории
-        if (categoriesContainer) {
-            categoriesContainer.style.display = 'none';
-        }
-
-        // Очищаем и заполняем контейнер товаров
-        productsContainer.innerHTML = `
-            <button class="back-to-categories" onclick="backToCategories()">
-                ← Назад к категориям
-            </button>
-            <div class="products-grid"></div>
-        `;
-
-        const productsGrid = productsContainer.querySelector('.products-grid');
-        
-        // Добавляем товары
-        products[category].forEach(product => {
-            const card = createProductCard(product);
-            productsGrid.appendChild(card);
-        });
-
-    } catch (error) {
-        console.error('Ошибка при загрузке товаров:', error);
-        productsContainer.innerHTML = `
-            <div class="error-message">
-                <p>Произошла ошибка при загрузке товаров</p>
-                <button onclick="backToCategories()">Вернуться к категориям</button>
-            </div>
-        `;
+    // Скрываем категории
+    const categoriesContainer = document.querySelector('.categories');
+    if (categoriesContainer) {
+        categoriesContainer.style.display = 'none';
     }
+
+    // Очищаем и заполняем контейнер товаров
+    productsContainer.innerHTML = `
+        <button class="back-to-categories" onclick="backToCategories()">
+            ← Назад к категориям
+        </button>
+        <div class="products-grid"></div>
+    `;
+
+    const productsGrid = productsContainer.querySelector('.products-grid');
+    
+    // Добавляем товары
+    categoryProducts.forEach(product => {
+        const card = createProductCard(product);
+        productsGrid.appendChild(card);
+    });
 }
 
 // Функция возврата к категориям
@@ -321,7 +310,6 @@ function backToCategories() {
     if (productsContainer) {
         productsContainer.innerHTML = '';
     }
-    
     if (categoriesContainer) {
         categoriesContainer.style.display = 'flex';
     }

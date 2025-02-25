@@ -15,16 +15,16 @@
     </div>
     <h1>Каталог товаров</h1>
     <div class="categories">
-        <div class="category" id="men-category" onclick="loadProducts('men')">
-            <img src="images/categories/men.jpg" alt="Мужская одежда">
+        <div class="category" id="men-category">
+            <img src="/images/categories/men.jpg" alt="Мужская одежда">
             <h2>Мужская одежда</h2>
         </div>
-        <div class="category" id="women-category" onclick="loadProducts('women')">
-            <img src="images/categories/women.jpg" alt="Женская одежда">
+        <div class="category" id="women-category">
+            <img src="/images/categories/women.jpg" alt="Женская одежда">
             <h2>Женская одежда</h2>
         </div>
-        <div class="category" id="home-category" onclick="loadProducts('home')">
-            <img src="images/categories/home.jpg" alt="Домашний текстиль">
+        <div class="category" id="home-category">
+            <img src="/images/categories/home.jpg" alt="Домашний текстиль">
             <h2>Домашний текстиль</h2>
         </div>
     </div>
@@ -34,7 +34,7 @@
 
     <!-- Скрипты добавляем в конец body -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="products.js"></script>
+    <script src="/products.js"></script>
     <script>
         // Инициализация после загрузки страницы
         window.onload = function() {
@@ -43,6 +43,14 @@
             if (cartButton) {
                 cartButton.onclick = () => window.location.href = 'cart.html';
             }
+
+            // Добавляем обработчики для категорий
+            document.querySelectorAll('.category').forEach(category => {
+                category.onclick = function() {
+                    const categoryId = this.id.split('-')[0]; // men, women, home
+                    loadProducts(categoryId);
+                };
+            });
 
             // Обновляем счетчик корзины
             if (typeof updateCartButton === 'function') {
