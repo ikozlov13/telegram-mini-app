@@ -831,3 +831,27 @@ h1 {
         height: auto;
     }
 }
+
+/* Стили для сетки товаров */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Кнопка возврата к категориям */
+.back-to-categories {
+    background: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 20px;
+    transition: background-color 0.3s;
+}
+
+.back-to-categories:hover {
+    background: #1976D2;
+}

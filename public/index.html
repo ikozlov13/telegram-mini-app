@@ -22,7 +22,7 @@
             <h2>Мужская одежда</h2>
         </div>
         <div class="category" id="women-category">
-            <img src="images/women.jpg" alt="Женская одежда">
+            <img src="images/categories/women.jpg" alt="Женская одежда">
             <h2>Женская одежда</h2>
         </div>
         <div class="category" id="home-category">
@@ -30,5 +30,31 @@
             <h2>Домашний текстиль</h2>
         </div>
     </div>
+
+    <!-- Добавляем контейнер для товаров -->
+    <div id="products-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Обработчик для кнопки корзины
+            const cartButton = document.getElementById('cart-button');
+            if (cartButton) {
+                cartButton.addEventListener('click', () => {
+                    window.location.href = 'cart.html';
+                });
+            }
+
+            // Обработчик для категории
+            const womenCategory = document.getElementById('women-category');
+            if (womenCategory) {
+                womenCategory.addEventListener('click', () => {
+                    loadProducts('women');
+                });
+            }
+
+            // Обновляем счетчик корзины
+            updateCartButton();
+        });
+    </script>
 </body>
 </html>

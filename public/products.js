@@ -217,21 +217,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Функция для загрузки товаров
+// Функция загрузки товаров
 function loadProducts(category) {
     const productsContainer = document.getElementById('products-container');
-    const categoryProducts = products[category];
+    if (!productsContainer) {
+        console.error('Контейнер для товаров не найден');
+        return;
+    }
 
+    const categoryProducts = products[category];
     if (!categoryProducts) {
         productsContainer.innerHTML = '<p>Товары не найдены</p>';
         return;
     }
 
+    // Очищаем контейнер и скрываем категории
     productsContainer.innerHTML = '';
-    categoryProducts.forEach(product => {
-        const card = createProductCard(product);
-        productsContainer.appendChild(card);
+    const categoriesContainer = document.querySelector('.categories');
+    if (categoriesContainer) {
+        categoriesContainer.style.display = 'none';
+    }
+
+    // Добавляем кнопку возврата к категориям
+    const backButton = document.createElement('button');
+    backButton.className = 'back-to-categories';
+    backButton.textContent = '← Назад к категориям';
+    backButton.onclick = () => {
+        productsContainer.innerHTML = '';
+        if (categoriesContainer) {
+            categoriesContainer.style.display = 'flex';
+        }
+    };
+    productsContainer.appendChild(backButton);
+
+    // Создаем контейнер для товаров
+    const productsGrid = document.createElement('div');
+    productsGrid.className = 'products-grid';
+    
+    // Добавляем товары
+    categoryProducts.forEach(async product => {
+        const card = await createProductCard(product);
+        productsGrid.appendChild(card);
     });
+
+    productsContainer.appendChild(productsGrid);
 }
 
 // Добавим функцию для поиска товара по ID
