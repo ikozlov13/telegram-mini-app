@@ -555,7 +555,32 @@ const products = {
     ]
 };
 
-// Обработчик событий для карточки товара
+// Функция для предварительной загрузки изображений
+function preloadImages(product) {
+    const images = [];
+    
+    // Загружаем основные изображения
+    Object.values(product.image).forEach(src => {
+        const img = new Image();
+        img.src = src;
+        images.push(img);
+    });
+
+    // Загружаем изображения галереи
+    if (product.gallery) {
+        Object.values(product.gallery).forEach(gallery => {
+            gallery.forEach(src => {
+                const img = new Image();
+                img.src = src;
+                images.push(img);
+            });
+        });
+    }
+
+    return images;
+}
+
+// Обновляем функцию initializeProductCard
 function initializeProductCard(productCard) {
     const colorOptions = productCard.querySelectorAll('.color-option');
     const sizeOptions = productCard.querySelectorAll('.size-option');
@@ -605,7 +630,28 @@ function initializeProductCard(productCard) {
 
         const productId = productCard.dataset.productId;
         const product = findProductById(productId);
-        addToCart(product, selectedSize, selectedColor);
+        
+        // Предварительно загружаем все изображения товара
+        const preloadedImages = preloadImages(product);
+
+        // Добавляем индикатор загрузки
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'loading-indicator';
+        productCard.querySelector('.product-image-container').appendChild(loadingIndicator);
+
+        // Скрываем индикатор после загрузки всех изображений
+        Promise.all(preloadedImages.map(img => {
+            return new Promise((resolve) => {
+                if (img.complete) {
+                    resolve();
+                } else {
+                    img.onload = resolve;
+                }
+            });
+        })).then(() => {
+            loadingIndicator.style.display = 'none';
+            addToCart(product, selectedSize, selectedColor);
+        });
     });
 }
 
@@ -637,20 +683,27 @@ function initializeGallery(productCard) {
         const thumb = thumbs[index];
         const newSrc = thumb.dataset.image;
         
-        // Добавляем класс для анимации
-        mainImage.classList.add(direction === 'next' ? 'fade-exit' : 'fade-enter');
-        modalImage.classList.add(direction === 'next' ? 'fade-exit' : 'fade-enter');
+        // Удаляем предыдущие классы анимации
+        mainImage.classList.remove('fade-enter', 'fade-exit', 'slide-left', 'slide-right');
         
+        // Добавляем новый класс анимации в зависимости от направления
+        if (direction === 'next') {
+            mainImage.classList.add('slide-left');
+        } else {
+            mainImage.classList.add('slide-right');
+        }
+        
+        // Меняем изображение после начала анимации
         setTimeout(() => {
             mainImage.src = newSrc;
             modalImage.src = newSrc;
-            mainImage.classList.remove(direction === 'next' ? 'fade-exit' : 'fade-enter');
-            modalImage.classList.remove(direction === 'next' ? 'fade-exit' : 'fade-enter');
-        }, 300);
-
-        thumbs.forEach(t => t.classList.remove('active'));
-        thumb.classList.add('active');
-        currentIndex = index;
+            
+            // Обновляем активную миниатюру
+            thumbs.forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+            
+            currentIndex = index;
+        }, 150);
     }
 
     // Обработка зума
