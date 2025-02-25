@@ -37,9 +37,11 @@ bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, "Добро пожаловать в магазин одежды!", {
         reply_markup: {
-            inline_keyboard: [
-                [{ text: "Открыть магазин", web_app: { url: "https://telegram-mini-app-zog6.onrender.com/" } }]
-            ]
+            keyboard: [[{
+                text: "Открыть магазин",
+                web_app: { url: "https://telegram-mini-app-zog6.onrender.com" } // URL на Render
+            }]],
+            resize_keyboard: true
         }
     });
 });

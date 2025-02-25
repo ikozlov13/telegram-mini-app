@@ -136,8 +136,7 @@ function loadProducts() {
 document.addEventListener('DOMContentLoaded', loadProducts);
 
 // Функция для оформления заказа
-// Отправляет данные в Telegram и очищает корзину
-function checkout() {
+async function checkout() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     
     if (cart.length === 0) {
@@ -153,12 +152,33 @@ function checkout() {
         timestamp: new Date().toISOString()
     };
 
-    // Отправляем данные в Telegram
-    Telegram.WebApp.sendData(JSON.stringify(orderData));
-    
-    // Очищаем корзину
-    localStorage.removeItem('cart');
-    
-    // Закрываем WebApp
-    Telegram.WebApp.close();
+    try {
+        // Отправляем данные в Telegram
+        await Telegram.WebApp.sendData(JSON.stringify(orderData));
+        
+        // Показываем сообщение об успешном оформлении
+        Telegram.WebApp.showPopup({
+            title: 'Спасибо за заказ!',
+            message: 'Мы свяжемся с вами в ближайшее время',
+            buttons: [{
+                type: 'close',
+                text: 'Закрыть'
+            }]
+        });
+
+        // Очищаем корзину
+        localStorage.removeItem('cart');
+        
+        // Не закрываем WebApp автоматически
+        // Telegram.WebApp.close();
+    } catch (error) {
+        Telegram.WebApp.showPopup({
+            title: 'Ошибка',
+            message: 'Произошла ошибка при оформлении заказа',
+            buttons: [{
+                type: 'close',
+                text: 'Закрыть'
+            }]
+        });
+    }
 }
