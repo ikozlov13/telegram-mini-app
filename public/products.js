@@ -1,3 +1,86 @@
+// Объявляем products в начале файла
+const products = {
+    women: [
+        {
+            id: 'w-tshirt',
+            name: 'Футболка женская',
+            description: 'Стильная футболка оверсайз из премиального хлопка. Идеально для повседневной носки.',
+            price: 3499,
+            image: {
+                'Черный': 'images/women/tshirt/tshirt-black-1.jpg',
+                'Белый': 'images/women/tshirt/tshirt-white-1.jpg',
+                'Фуксия': 'images/women/tshirt/tshirt-fuchsia-1.jpg',
+                'Зеленый': 'images/women/tshirt/tshirt-green-1.jpg'
+            },
+            gallery: {
+                'Черный': [
+                    'images/women/tshirt/tshirt-black-1.jpg',
+                    'images/women/tshirt/tshirt-black-2.jpg',
+                    'images/women/tshirt/tshirt-black-3.jpg',
+                    'images/women/tshirt/tshirt-black-4.jpg',
+                    'images/women/tshirt/tshirt-black-5.jpg'
+                ],
+                'Белый': [
+                    'images/women/tshirt/tshirt-white-1.jpg',
+                    'images/women/tshirt/tshirt-white-2.jpg',
+                    'images/women/tshirt/tshirt-white-3.jpg',
+                    'images/women/tshirt/tshirt-white-4.jpg',
+                    'images/women/tshirt/tshirt-white-5.jpg',
+                    'images/women/tshirt/tshirt-white-6.jpg'
+                ],
+                'Фуксия': [
+                    'images/women/tshirt/tshirt-fuchsia-1.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-2.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-3.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-4.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-5.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-6.jpg'
+                ],
+                'Зеленый': [
+                    'images/women/tshirt/tshirt-green-1.jpg',
+                    'images/women/tshirt/tshirt-green-2.jpg',
+                    'images/women/tshirt/tshirt-green-3.jpg',
+                    'images/women/tshirt/tshirt-green-4.jpg',
+                    'images/women/tshirt/tshirt-green-5.jpg',
+                    'images/women/tshirt/tshirt-green-6.jpg'
+                ]
+            },
+            sizes: ['Оверсайз'],
+            colors: [
+                { name: 'Черный', code: '#000000' },
+                { name: 'Белый', code: '#FFFFFF' },
+                { name: 'Фуксия', code: '#FF1493' },
+                { name: 'Зеленый', code: '#228B22' }
+            ],
+            composition: '92% хлопок, 8% эластан'
+        },
+        {
+            id: 'w-raincoat',
+            name: 'Плащ-дождевик',
+            description: 'Стильный и практичный дождевик из премиальной ткани Oxford.',
+            price: 4999,
+            image: {
+                'Бежевый': 'images/women/raincoat/raincoat-beige-1.JPG'
+            },
+            gallery: {
+                'Бежевый': [
+                    'images/women/raincoat/raincoat-beige-1.JPG',
+                    'images/women/raincoat/raincoat-beige-2.JPG',
+                    'images/women/raincoat/raincoat-beige-3.JPG',
+                    'images/women/raincoat/raincoat-beige-4.JPG',
+                    'images/women/raincoat/raincoat-beige-5.JPG',
+                    'images/women/raincoat/raincoat-beige-6.JPG'
+                ]
+            },
+            sizes: ['S', 'M', 'L'],
+            colors: [
+                { name: 'Бежевый', code: '#F5F5DC' }
+            ],
+            composition: '100% Oxford'
+        }
+    ]
+};
+
 // Функция для получения параметра из URL
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -142,36 +225,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Функция для загрузки товаров
-function loadProducts() {
-    const category = getQueryParam('category');
-    const titleElement = document.getElementById('category-title');
+function loadProducts(category) {
     const productsContainer = document.getElementById('products-container');
+    const categoryProducts = products[category];
 
-    // Устанавливаем заголовок категории
-    const titles = {
-        'men': 'Мужская одежда',
-        'women': 'Женская одежда',
-        'home': 'Домашний текстиль'
-    };
-    titleElement.textContent = titles[category] || 'Категория не найдена';
-
-    // Получаем товары для выбранной категории
-    const categoryProducts = products[category] || [];
-
-    if (categoryProducts.length > 0) {
-        // Отображаем товары используя новый шаблон
-        productsContainer.innerHTML = categoryProducts
-            .map(product => createProductCard(product))
-            .join('');
-
-        // Инициализируем обработчики для каждой карточки
-        document.querySelectorAll('.product-card').forEach(card => {
-            initializeProductCard(card);
-            initializeGallery(card);
-        });
-    } else {
-        productsContainer.innerHTML = '<p>Товары для этой категории отсутствуют.</p>';
+    if (!categoryProducts) {
+        productsContainer.innerHTML = '<p>Товары не найдены</p>';
+        return;
     }
+
+    productsContainer.innerHTML = '';
+    categoryProducts.forEach(product => {
+        const card = createProductCard(product);
+        productsContainer.appendChild(card);
+    });
 }
 
 // Добавим функцию для поиска товара по ID
@@ -184,7 +251,14 @@ function findProductById(productId) {
 }
 
 // Загружаем товары при загрузке страницы
-document.addEventListener('DOMContentLoaded', loadProducts);
+document.addEventListener('DOMContentLoaded', () => {
+    const category = getQueryParam('category');
+    if (category) {
+        loadProducts(category);
+    } else {
+        loadProducts('women');
+    }
+});
 
 // Функция для оформления заказа
 async function checkout() {
