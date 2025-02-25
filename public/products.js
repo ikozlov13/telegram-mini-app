@@ -33,15 +33,14 @@ function addToCart(product, selectedSize, selectedColor) {
 
     localStorage.setItem('cart', JSON.stringify(cart));
     
-    // Показываем уведомление
-    Telegram.WebApp.showPopup({
-        title: 'Товар добавлен в корзину',
-        message: `${product.name} (${selectedSize}, ${selectedColor})`,
-        buttons: [{
-            type: 'ok',
-            text: 'Перейти в корзину'
-        }]
-    });
+    // Заменяем showPopup на HapticFeedback и MainButton
+    Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    
+    // Показываем кнопку "Перейти в корзину"
+    const mainButton = Telegram.WebApp.MainButton;
+    mainButton.text = "Перейти в корзину";
+    mainButton.show();
+    mainButton.onClick(() => handleGoToCart());
 }
 
 function handleGoToCart(event) {
@@ -54,91 +53,44 @@ function handleGoToCart(event) {
 
 // Функция для загрузки товаров
 function loadProducts() {
-    const category = getQueryParam('category'); // Используем функцию getQueryParam
+    const category = getQueryParam('category');
     const titleElement = document.getElementById('category-title');
     const productsContainer = document.getElementById('products-container');
 
-    if (category === 'men') {
-        titleElement.textContent = 'Мужская одежда';
-        productsContainer.innerHTML = `
-            <div class="product">
-                <img src="images/men-product1.jpg" alt="Футболка">
-                <h2>Футболка</h2>
-                <p>Стильная футболка для повседневной носки.</p>
-                <p class="price">1500 руб.</p>
-                <button data-product-id="men-product1">Купить</button>
-            </div>
-            <div class="product">
-                <img src="images/men-product2.jpg" alt="Джинсы">
-                <h2>Джинсы</h2>
-                <p>Классические джинсы для любого случая.</p>
-                <p class="price">3000 руб.</p>
-                <button data-product-id="men-product2">Купить</button>
-            </div>
-        `;
-    } else if (category === 'women') {
-        titleElement.textContent = 'Женская одежда';
-        productsContainer.innerHTML = `
-            <div class="product">
-                <img src="images/women-product1.jpg" alt="Платье">
-                <h2>Платье</h2>
-                <p>Элегантное платье для вечеринки.</p>
-                <p class="price">2500 руб.</p>
-                <button data-product-id="women-product1">Купить</button>
-            </div>
-            <div class="product">
-                <img src="images/women-product2.jpg" alt="Юбка">
-                <h2>Юбка</h2>
-                <p>Стильная юбка для офиса.</p>
-                <p class="price">2000 руб.</p>
-                <button data-product-id="women-product2">Купить</button>
-            </div>
-        `;
-    } else if (category === 'home') {
-        titleElement.textContent = 'Домашний текстиль';
-        productsContainer.innerHTML = `
-            <div class="product">
-                <img src="images/home-product1.jpg" alt="Плед">
-                <h2>Плед</h2>
-                <p>Мягкий плед для уютного вечера.</p>
-                <p class="price">1000 руб.</p>
-                <button data-product-id="home-product1">Купить</button>
-            </div>
-            <div class="product">
-                <img src="images/home-product2.jpg" alt="Подушка">
-                <h2>Подушка</h2>
-                <p>Комфортная подушка для сна.</p>
-                <p class="price">800 руб.</p>
-                <button data-product-id="home-product2">Купить</button>
-            </div>
-        `;
+    // Устанавливаем заголовок категории
+    const titles = {
+        'men': 'Мужская одежда',
+        'women': 'Женская одежда',
+        'home': 'Домашний текстиль'
+    };
+    titleElement.textContent = titles[category] || 'Категория не найдена';
+
+    // Получаем товары для выбранной категории
+    const categoryProducts = products[category] || [];
+
+    if (categoryProducts.length > 0) {
+        // Отображаем товары используя новый шаблон
+        productsContainer.innerHTML = categoryProducts
+            .map(product => createProductCard(product))
+            .join('');
+
+        // Инициализируем обработчики для каждой карточки
+        document.querySelectorAll('.product-card').forEach(card => {
+            initializeProductCard(card);
+            initializeGallery(card);
+        });
     } else {
-        titleElement.textContent = 'Категория не найдена';
         productsContainer.innerHTML = '<p>Товары для этой категории отсутствуют.</p>';
     }
+}
 
-    // Изменяем привязку событий для кнопок "Купить"
-    document.querySelectorAll('.product button').forEach(button => {
-        // Удаляем старые обработчики
-        button.replaceWith(button.cloneNode(true));
-    });
-    
-    // Добавляем новые обработчики
-    document.querySelectorAll('.product button').forEach(button => {
-        button.addEventListener('click', (event) => {
-            event.preventDefault();
-            const product = button.closest('.product');
-            const name = product.querySelector('h2').textContent;
-            const price = parseFloat(product.querySelector('.price').textContent);
-            const image = product.querySelector('img').src;
-            
-            if (button.textContent === 'Перейти в корзину') {
-                handleGoToCart(event);
-            } else {
-                addToCart(product, '', '');
-            }
-        });
-    });
+// Добавим функцию для поиска товара по ID
+function findProductById(productId) {
+    for (const category in products) {
+        const product = products[category].find(p => p.id === productId);
+        if (product) return product;
+    }
+    return null;
 }
 
 // Загружаем товары при загрузке страницы
@@ -306,11 +258,23 @@ const products = {
         {
             id: 'w-suit',
             name: 'Костюм повседневный',
-            description: 'Комфортный костюм из футера: брюки и кардиган. Идеален для отдыха и casual стиля.',
+            description: 'Комфортный костюм из премиального футера: брюки и кардиган. Идеальное сочетание стиля и комфорта для повседневной носки. Свободный крой обеспечивает максимальное удобство.',
             price: 7499,
             image: {
                 'Графитовый': 'images/women/suit-graphite.jpg',
                 'Пудровый': 'images/women/suit-powder.jpg'
+            },
+            gallery: {
+                'Графитовый': [
+                    'images/women/suit-graphite-1.jpg',
+                    'images/women/suit-graphite-2.jpg',
+                    'images/women/suit-graphite-3.jpg'
+                ],
+                'Пудровый': [
+                    'images/women/suit-powder-1.jpg',
+                    'images/women/suit-powder-2.jpg',
+                    'images/women/suit-powder-3.jpg'
+                ]
             },
             sizes: ['S', 'M', 'L', 'XL'],
             colors: [
@@ -322,12 +286,29 @@ const products = {
         {
             id: 'w-robe-check',
             name: 'Халат вафельный клетка 7/7',
-            description: 'Комфортный вафельный халат в классическую клетку.',
+            description: 'Комфортный вафельный халат в классическую клетку. Мягкая и приятная к телу ткань, отличная впитываемость. Практичный и стильный дизайн подойдет для дома и спа.',
             price: 3499,
             image: {
                 'Бежевый': 'images/women/robe-check-beige.jpg',
                 'Горчичный': 'images/women/robe-check-mustard.jpg',
                 'Темно-синий': 'images/women/robe-check-navy.jpg'
+            },
+            gallery: {
+                'Бежевый': [
+                    'images/women/robe-check-beige-1.jpg',
+                    'images/women/robe-check-beige-2.jpg',
+                    'images/women/robe-check-beige-3.jpg'
+                ],
+                'Горчичный': [
+                    'images/women/robe-check-mustard-1.jpg',
+                    'images/women/robe-check-mustard-2.jpg',
+                    'images/women/robe-check-mustard-3.jpg'
+                ],
+                'Темно-синий': [
+                    'images/women/robe-check-navy-1.jpg',
+                    'images/women/robe-check-navy-2.jpg',
+                    'images/women/robe-check-navy-3.jpg'
+                ]
             },
             sizes: ['M-L', 'XL', 'XXL'],
             colors: [
@@ -340,12 +321,29 @@ const products = {
         {
             id: 'w-shirt',
             name: 'Рубашка женская',
-            description: 'Элегантная рубашка из натурального льна. Идеальна для летнего сезона.',
+            description: 'Элегантная рубашка из натурального льна. Свободный крой и натуральная ткань обеспечивают комфорт в жаркую погоду. Идеально сочетается как с деловым, так и с повседневным стилем.',
             price: 4990,
             image: {
                 'Черный': 'images/women/shirt-black.jpg',
                 'Темно-синий': 'images/women/shirt-navy.jpg',
                 'Темно-зеленый': 'images/women/shirt-green.jpg'
+            },
+            gallery: {
+                'Черный': [
+                    'images/women/shirt-black-1.jpg',
+                    'images/women/shirt-black-2.jpg',
+                    'images/women/shirt-black-3.jpg'
+                ],
+                'Темно-синий': [
+                    'images/women/shirt-navy-1.jpg',
+                    'images/women/shirt-navy-2.jpg',
+                    'images/women/shirt-navy-3.jpg'
+                ],
+                'Темно-зеленый': [
+                    'images/women/shirt-green-1.jpg',
+                    'images/women/shirt-green-2.jpg',
+                    'images/women/shirt-green-3.jpg'
+                ]
             },
             sizes: ['Оверсайз'],
             colors: [
@@ -355,7 +353,52 @@ const products = {
             ],
             composition: '100% лен'
         },
-        // ... добавьте остальные товары из списка
+        {
+            id: 'w-robe-boho',
+            name: 'Халат вафельный Бохо',
+            description: 'Стильный вафельный халат в стиле Бохо.',
+            price: 5499,
+            image: {
+                'Белый': 'images/women/robe-boho-white.jpg',
+                'Синий': 'images/women/robe-boho-blue.jpg',
+                'Шоколад': 'images/women/robe-boho-chocolate.jpg'
+            },
+            sizes: ['M-L', 'XL', 'XXL'],
+            colors: [
+                { name: 'Белый', code: '#FFFFFF' },
+                { name: 'Синий', code: '#000080' },
+                { name: 'Шоколад', code: '#D2691E' }
+            ],
+            composition: '100% хлопок'
+        },
+        {
+            id: 'w-robe-linen',
+            name: 'Халат Полулен в полоску',
+            description: 'Элегантный халат из смесовой ткани полулен.',
+            price: 4999,
+            image: {
+                'Бежевый': 'images/women/robe-linen-beige.jpg'
+            },
+            sizes: ['L', 'XL'],
+            colors: [
+                { name: 'Бежевый', code: '#F5F5DC' }
+            ],
+            composition: '50% Лен, 50% Хлопок'
+        },
+        {
+            id: 'w-raincoat',
+            name: 'Плащ-дождевик',
+            description: 'Практичный и стильный дождевик из ткани Oxford.',
+            price: 4999,
+            image: {
+                'Бежевый': 'images/women/raincoat-beige.jpg'
+            },
+            sizes: ['Оверсайз'],
+            colors: [
+                { name: 'Бежевый', code: '#F5F5DC' }
+            ],
+            composition: '100% Oxford'
+        }
     ],
     men: [
         {
@@ -363,7 +406,11 @@ const products = {
             name: 'Футболка мужская',
             description: 'Классическая футболка из премиального хлопка.',
             price: 3499,
-            image: 'images/men/tshirt.jpg',
+            image: {
+                'Черный': 'images/men/tshirt-black.jpg',
+                'Белый': 'images/men/tshirt-white.jpg',
+                'Зеленый': 'images/men/tshirt-green.jpg'
+            },
             sizes: ['L', 'XL'],
             colors: [
                 { name: 'Черный', code: '#000000' },
@@ -371,6 +418,24 @@ const products = {
                 { name: 'Зеленый', code: '#228B22' }
             ],
             composition: '92% хлопок, 8% эластан'
+        },
+        {
+            id: 'm-robe-boho',
+            name: 'Халат вафельный Бохо',
+            description: 'Стильный вафельный халат в стиле Бохо.',
+            price: 5499,
+            image: {
+                'Белый': 'images/men/robe-boho-white.jpg',
+                'Синий': 'images/men/robe-boho-blue.jpg',
+                'Шоколад': 'images/men/robe-boho-chocolate.jpg'
+            },
+            sizes: ['M-L', 'XL', 'XXL'],
+            colors: [
+                { name: 'Белый', code: '#FFFFFF' },
+                { name: 'Синий', code: '#000080' },
+                { name: 'Шоколад', code: '#D2691E' }
+            ],
+            composition: '100% хлопок'
         }
     ],
     home: [
@@ -379,12 +444,42 @@ const products = {
             name: 'Вафельные полотенца 2 шт',
             description: 'Комплект из двух вафельных полотенец.',
             price: 650,
-            image: 'images/home/towels.jpg',
+            image: {
+                'Белый': 'images/home/towels-white.jpg'
+            },
             sizes: ['45х75'],
             colors: [
                 { name: 'Белый', code: '#FFFFFF' }
             ],
             composition: '100% хлопок'
+        },
+        {
+            id: 'h-tablecloth',
+            name: 'Скатерть Полулен',
+            description: 'Элегантная скатерть из смесовой ткани полулен.',
+            price: 4199,
+            image: {
+                'Бежевый': 'images/home/tablecloth-beige.jpg'
+            },
+            sizes: ['150х250'],
+            colors: [
+                { name: 'Бежевый', code: '#F5F5DC' }
+            ],
+            composition: '50% Лен, 50% хлопок'
+        },
+        {
+            id: 'h-napkins',
+            name: 'Салфетки сервировочные 6 шт',
+            description: 'Комплект из 6 льняных салфеток в подарочной упаковке.',
+            price: 3599,
+            image: {
+                'Белый': 'images/home/napkins-white.jpg'
+            },
+            sizes: ['45х45'],
+            colors: [
+                { name: 'Белый', code: '#FFFFFF' }
+            ],
+            composition: '100% Лен'
         }
     ]
 };
@@ -425,17 +520,15 @@ function initializeProductCard(productCard) {
     // Обработка добавления в корзину
     addToCartBtn.addEventListener('click', () => {
         if (!selectedSize) {
-            Telegram.WebApp.showPopup({
-                title: 'Выберите размер',
-                message: 'Пожалуйста, выберите размер товара'
-            });
+            Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+            // Можно добавить визуальное выделение поля размера
+            sizeOptions.forEach(opt => opt.classList.add('error-highlight'));
             return;
         }
         if (!selectedColor) {
-            Telegram.WebApp.showPopup({
-                title: 'Выберите цвет',
-                message: 'Пожалуйста, выберите цвет товара'
-            });
+            Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+            // Можно добавить визуальное выделение поля цвета
+            colorOptions.forEach(opt => opt.classList.add('error-highlight'));
             return;
         }
 

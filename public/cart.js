@@ -11,39 +11,122 @@ function displayCart() {
         return;
     }
 
-    renderCart(cart);
+    renderCart();
 }
 
 // Функция для отрисовки корзины
-function renderCart(cart) {
+function renderCart() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const cartContainer = document.getElementById('cart-container');
-    let total = 0;
-    let cartHTML = '';
+    
+    if (cart.length === 0) {
+        cartContainer.innerHTML = '<p>Ваша корзина пуста</p>';
+        return;
+    }
 
-    cart.forEach((item, index) => {
-        total += item.price * item.quantity;
-        cartHTML += `
-            <div class="cart-item" data-index="${index}" data-product-id="${item.id}">
-                <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3>${item.name}</h3>
-                    <p>Цена: ${item.price} руб.</p>
-                    <div class="quantity-controls">
-                        <button class="quantity-minus">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="quantity-plus">+</button>
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    cartContainer.innerHTML = `
+        <div class="cart-items">
+            ${cart.map((item, index) => `
+                <div class="cart-item" data-index="${index}" data-product-id="${item.id}">
+                    <img src="${item.image[item.color]}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <h3>${item.name}</h3>
+                        <p>Размер: ${item.size}</p>
+                        <p>Цвет: ${item.color}</p>
+                        <p>Цена: ${item.price} ₽</p>
+                        <div class="quantity-controls">
+                            <button class="quantity-minus">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-plus">+</button>
+                        </div>
+                        <button class="remove-button">Удалить</button>
                     </div>
-                    <button class="remove-button">Удалить</button>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="delivery-section">
+            <h3>Способ получения</h3>
+            <div class="delivery-options">
+                <label class="delivery-option">
+                    <input type="radio" name="delivery" value="pickup" checked>
+                    <span class="radio-custom"></span>
+                    <div class="delivery-info">
+                        <h4>Самовывоз</h4>
+                        <p>г. Москва, ул. Примерная, д. 1</p>
+                        <p>Бесплатно</p>
+                    </div>
+                </label>
+
+                <label class="delivery-option">
+                    <input type="radio" name="delivery" value="delivery">
+                    <span class="radio-custom"></span>
+                    <div class="delivery-info">
+                        <h4>Доставка курьером</h4>
+                        <p>Доставка в пределах МКАД</p>
+                        <p>350 ₽</p>
+                    </div>
+                </label>
+            </div>
+
+            <div class="delivery-address" style="display: none;">
+                <h4>Адрес доставки</h4>
+                <div class="form-group">
+                    <input type="text" id="phone" placeholder="Телефон" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="address" placeholder="Адрес" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="apartment" placeholder="Квартира/Офис">
+                </div>
+                <div class="form-group">
+                    <textarea id="comment" placeholder="Комментарий к заказу"></textarea>
                 </div>
             </div>
-        `;
-    });
+        </div>
 
-    cartHTML += `<h3>Общая сумма: ${total} руб.</h3>`;
-    cartContainer.innerHTML = cartHTML;
+        <div class="cart-summary">
+            <div class="summary-row">
+                <span>Товары (${cart.length})</span>
+                <span>${total.toLocaleString()} ₽</span>
+            </div>
+            <div class="summary-row delivery-cost" style="display: none;">
+                <span>Доставка</span>
+                <span>350 ₽</span>
+            </div>
+            <div class="summary-row total">
+                <span>Итого</span>
+                <span class="total-amount">${total.toLocaleString()} ₽</span>
+            </div>
+            <button onclick="checkout()" class="checkout-btn">Оформить заказ</button>
+        </div>
+    `;
 
-    // Добавляем обработчики событий после рендеринга
     addCartEventListeners();
+    initializeDeliveryForm();
+
+    // Обработчики для способа доставки
+    const deliveryRadios = document.querySelectorAll('input[name="delivery"]');
+    const deliveryAddress = document.querySelector('.delivery-address');
+    const deliveryCost = document.querySelector('.delivery-cost');
+    const totalAmount = document.querySelector('.total-amount');
+
+    deliveryRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'delivery') {
+                deliveryAddress.style.display = 'block';
+                deliveryCost.style.display = 'flex';
+                totalAmount.textContent = `${(total + 350).toLocaleString()} ₽`;
+            } else {
+                deliveryAddress.style.display = 'none';
+                deliveryCost.style.display = 'none';
+                totalAmount.textContent = `${total.toLocaleString()} ₽`;
+            }
+        });
+    });
 }
 
 // Добавляем новую функцию для установки обработчиков событий
@@ -176,105 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Загружаем корзину при открытии страницы
     displayCart();
 });
-
-function renderCart() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartContainer = document.getElementById('cart-container');
-    
-    if (cart.length === 0) {
-        cartContainer.innerHTML = '<p>Ваша корзина пуста</p>';
-        return;
-    }
-
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-    cartContainer.innerHTML = `
-        <div class="cart-items">
-            ${cart.map(item => `
-                <div class="cart-item">
-                    <!-- существующий код для товаров -->
-                </div>
-            `).join('')}
-        </div>
-
-        <div class="delivery-section">
-            <h3>Способ получения</h3>
-            <div class="delivery-options">
-                <label class="delivery-option">
-                    <input type="radio" name="delivery" value="pickup" checked>
-                    <span class="radio-custom"></span>
-                    <div class="delivery-info">
-                        <h4>Самовывоз</h4>
-                        <p>г. Москва, ул. Примерная, д. 1</p>
-                        <p>Бесплатно</p>
-                    </div>
-                </label>
-
-                <label class="delivery-option">
-                    <input type="radio" name="delivery" value="delivery">
-                    <span class="radio-custom"></span>
-                    <div class="delivery-info">
-                        <h4>Доставка курьером</h4>
-                        <p>Доставка в пределах МКАД</p>
-                        <p>350 ₽</p>
-                    </div>
-                </label>
-            </div>
-
-            <div class="delivery-address" style="display: none;">
-                <h4>Адрес доставки</h4>
-                <div class="form-group">
-                    <input type="text" id="phone" placeholder="Телефон" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="address" placeholder="Адрес" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="apartment" placeholder="Квартира/Офис">
-                </div>
-                <div class="form-group">
-                    <textarea id="comment" placeholder="Комментарий к заказу"></textarea>
-                </div>
-            </div>
-        </div>
-
-        <div class="cart-summary">
-            <div class="summary-row">
-                <span>Товары (${cart.length})</span>
-                <span>${total.toLocaleString()} ₽</span>
-            </div>
-            <div class="summary-row delivery-cost" style="display: none;">
-                <span>Доставка</span>
-                <span>350 ₽</span>
-            </div>
-            <div class="summary-row total">
-                <span>Итого</span>
-                <span class="total-amount">${total.toLocaleString()} ₽</span>
-            </div>
-            <button onclick="checkout()" class="checkout-btn">Оформить заказ</button>
-        </div>
-    `;
-
-    // Обработчики для способа доставки
-    const deliveryRadios = document.querySelectorAll('input[name="delivery"]');
-    const deliveryAddress = document.querySelector('.delivery-address');
-    const deliveryCost = document.querySelector('.delivery-cost');
-    const totalAmount = document.querySelector('.total-amount');
-
-    deliveryRadios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            if (e.target.value === 'delivery') {
-                deliveryAddress.style.display = 'block';
-                deliveryCost.style.display = 'flex';
-                totalAmount.textContent = `${(total + 350).toLocaleString()} ₽`;
-            } else {
-                deliveryAddress.style.display = 'none';
-                deliveryCost.style.display = 'none';
-                totalAmount.textContent = `${total.toLocaleString()} ₽`;
-            }
-        });
-    });
-}
 
 function initializeDeliveryForm() {
     // Маска для телефона

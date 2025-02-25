@@ -721,3 +721,14 @@ h1 {
 .error {
     animation: shake 0.3s ease-in-out;
 }
+
+.error-highlight {
+    animation: shake 0.5s ease-in-out;
+    border-color: #ff4444;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
