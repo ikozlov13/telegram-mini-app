@@ -77,21 +77,31 @@ async def check_webhook():
         logging.info("Webhook не обнаружен")
 
 async def main():
-    # Создаем новую сессию
-    await bot.session.close()
+    logging.info("Starting bot cleanup...")
+    
+    # Принудительно закрываем все сессии
+    try:
+        await bot.session.close()
+    except:
+        pass
+    
+    # Пересоздаем сессию
     bot._session = None
     
-    # Проверяем webhook перед запуском
+    logging.info("Checking webhook...")
     await check_webhook()
     
-    # Удаляем webhook и старые обновления
+    logging.info("Deleting webhook...")
     await bot.delete_webhook(drop_pending_updates=True)
     
-    # Очищаем все обновления перед запуском
-    await bot.get_updates(offset=-1)
-    
+    logging.info("Clearing updates...")
     try:
-        # Запускаем бота с таймаутом и пропуском накопившихся сообщений
+        await bot.get_updates(offset=-1, timeout=1)
+    except:
+        pass
+    
+    logging.info("Starting polling...")
+    try:
         await dp.start_polling(
             bot,
             allowed_updates=dp.resolve_used_update_types(),
@@ -99,6 +109,7 @@ async def main():
             timeout=30
         )
     finally:
+        logging.info("Closing bot session...")
         await bot.session.close()
 
 if __name__ == '__main__':
