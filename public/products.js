@@ -134,3 +134,30 @@ function loadProducts() {
 
 // Загружаем товары при загрузке страницы
 document.addEventListener('DOMContentLoaded', loadProducts);
+
+// Функция для оформления заказа
+function checkout() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    if (cart.length === 0) {
+        alert('Ваша корзина пуста!');
+        return;
+    }
+
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    
+    const orderData = {
+        items: cart,
+        total: total,
+        timestamp: new Date().toISOString()
+    };
+
+    // Отправляем данные в Telegram
+    Telegram.WebApp.sendData(JSON.stringify(orderData));
+    
+    // Очищаем корзину
+    localStorage.removeItem('cart');
+    
+    // Закрываем WebApp
+    Telegram.WebApp.close();
+}
