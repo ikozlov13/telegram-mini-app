@@ -102,10 +102,29 @@ function checkout() {
         return;
     }
 
+    // Формируем текст заказа
+    const orderDetails = cart.map(item => 
+        `${item.name} x${item.quantity} - ${item.price * item.quantity} руб.`
+    ).join('\n');
+
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    alert(`Заказ оформлен! Общая сумма: ${total} руб.`);
+    
+    const finalOrder = {
+        items: cart,
+        total: total,
+        timestamp: new Date().toISOString(),
+        user: Telegram.WebApp.initDataUnsafe.user
+    };
+
+    // Отправляем данные в Telegram
+    Telegram.WebApp.sendData(JSON.stringify(finalOrder));
+
+    // Очищаем корзину
     localStorage.removeItem('cart');
-    displayCart(); // Обновляем отображение корзины
+    displayCart();
+    
+    // Закрываем WebApp
+    Telegram.WebApp.close();
 }
 
 // Привязка событий после загрузки страницы
