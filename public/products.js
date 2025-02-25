@@ -219,31 +219,31 @@ const products = {
             description: 'Стильная футболка оверсайз из премиального хлопка. Идеально для повседневной носки.',
             price: 3499,
             image: {
-                'Черный': 'images/women/tshirt-black.jpg',
-                'Белый': 'images/women/tshirt-white.jpg',
-                'Фуксия': 'images/women/tshirt-fuchsia.jpg',
-                'Зеленый': 'images/women/tshirt-green.jpg'
+                'Черный': 'images/women/tshirt/tshirt-black.jpg',
+                'Белый': 'images/women/tshirt/tshirt-white.jpg',
+                'Фуксия': 'images/women/tshirt/tshirt-fuchsia.jpg',
+                'Зеленый': 'images/women/tshirt/tshirt-green.jpg'
             },
             gallery: {
                 'Черный': [
-                    'images/women/tshirt-black-1.jpg',
-                    'images/women/tshirt-black-2.jpg',
-                    'images/women/tshirt-black-3.jpg'
+                    'images/women/tshirt/tshirt-black-1.jpg',
+                    'images/women/tshirt/tshirt-black-2.jpg',
+                    'images/women/tshirt/tshirt-black-3.jpg'
                 ],
                 'Белый': [
-                    'images/women/tshirt-white-1.jpg',
-                    'images/women/tshirt-white-2.jpg',
-                    'images/women/tshirt-white-3.jpg'
+                    'images/women/tshirt/tshirt-white-1.jpg',
+                    'images/women/tshirt/tshirt-white-2.jpg',
+                    'images/women/tshirt/tshirt-white-3.jpg'
                 ],
                 'Фуксия': [
-                    'images/women/tshirt-fuchsia-1.jpg',
-                    'images/women/tshirt-fuchsia-2.jpg',
-                    'images/women/tshirt-fuchsia-3.jpg'
+                    'images/women/tshirt/tshirt-fuchsia-1.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-2.jpg',
+                    'images/women/tshirt/tshirt-fuchsia-3.jpg'
                 ],
                 'Зеленый': [
-                    'images/women/tshirt-green-1.jpg',
-                    'images/women/tshirt-green-2.jpg',
-                    'images/women/tshirt-green-3.jpg'
+                    'images/women/tshirt/tshirt-green-1.jpg',
+                    'images/women/tshirt/tshirt-green-2.jpg',
+                    'images/women/tshirt/tshirt-green-3.jpg'
                 ]
             },
             sizes: ['Оверсайз'],
@@ -261,19 +261,19 @@ const products = {
             description: 'Комфортный костюм из премиального футера: брюки и кардиган. Идеальное сочетание стиля и комфорта для повседневной носки. Свободный крой обеспечивает максимальное удобство.',
             price: 7499,
             image: {
-                'Графитовый': 'images/women/suit-graphite.jpg',
-                'Пудровый': 'images/women/suit-powder.jpg'
+                'Графитовый': 'images/women/suit/suit-graphite.jpg',
+                'Пудровый': 'images/women/suit/suit-powder.jpg'
             },
             gallery: {
                 'Графитовый': [
-                    'images/women/suit-graphite-1.jpg',
-                    'images/women/suit-graphite-2.jpg',
-                    'images/women/suit-graphite-3.jpg'
+                    'images/women/suit/suit-graphite-1.jpg',
+                    'images/women/suit/suit-graphite-2.jpg',
+                    'images/women/suit/suit-graphite-3.jpg'
                 ],
                 'Пудровый': [
-                    'images/women/suit-powder-1.jpg',
-                    'images/women/suit-powder-2.jpg',
-                    'images/women/suit-powder-3.jpg'
+                    'images/women/suit/suit-powder-1.jpg',
+                    'images/women/suit/suit-powder-2.jpg',
+                    'images/women/suit/suit-powder-3.jpg'
                 ]
             },
             sizes: ['S', 'M', 'L', 'XL'],
@@ -289,25 +289,25 @@ const products = {
             description: 'Комфортный вафельный халат в классическую клетку. Мягкая и приятная к телу ткань, отличная впитываемость. Практичный и стильный дизайн подойдет для дома и спа.',
             price: 3499,
             image: {
-                'Бежевый': 'images/women/robe-check-beige.jpg',
-                'Горчичный': 'images/women/robe-check-mustard.jpg',
-                'Темно-синий': 'images/women/robe-check-navy.jpg'
+                'Бежевый': 'images/women/robe-check/robe-check-beige.jpg',
+                'Горчичный': 'images/women/robe-check/robe-check-mustard.jpg',
+                'Темно-синий': 'images/women/robe-check/robe-check-navy.jpg'
             },
             gallery: {
                 'Бежевый': [
-                    'images/women/robe-check-beige-1.jpg',
-                    'images/women/robe-check-beige-2.jpg',
-                    'images/women/robe-check-beige-3.jpg'
+                    'images/women/robe-check/robe-check-beige-1.jpg',
+                    'images/women/robe-check/robe-check-beige-2.jpg',
+                    'images/women/robe-check/robe-check-beige-3.jpg'
                 ],
                 'Горчичный': [
-                    'images/women/robe-check-mustard-1.jpg',
-                    'images/women/robe-check-mustard-2.jpg',
-                    'images/women/robe-check-mustard-3.jpg'
+                    'images/women/robe-check/robe-check-mustard-1.jpg',
+                    'images/women/robe-check/robe-check-mustard-2.jpg',
+                    'images/women/robe-check/robe-check-mustard-3.jpg'
                 ],
                 'Темно-синий': [
-                    'images/women/robe-check-navy-1.jpg',
-                    'images/women/robe-check-navy-2.jpg',
-                    'images/women/robe-check-navy-3.jpg'
+                    'images/women/robe-check/robe-check-navy-1.jpg',
+                    'images/women/robe-check/robe-check-navy-2.jpg',
+                    'images/women/robe-check/robe-check-navy-3.jpg'
                 ]
             },
             sizes: ['M-L', 'XL', 'XXL'],
@@ -324,25 +324,25 @@ const products = {
             description: 'Элегантная рубашка из натурального льна. Свободный крой и натуральная ткань обеспечивают комфорт в жаркую погоду. Идеально сочетается как с деловым, так и с повседневным стилем.',
             price: 4990,
             image: {
-                'Черный': 'images/women/shirt-black.jpg',
-                'Темно-синий': 'images/women/shirt-navy.jpg',
-                'Темно-зеленый': 'images/women/shirt-green.jpg'
+                'Черный': 'images/women/shirt/shirt-black.jpg',
+                'Темно-синий': 'images/women/shirt/shirt-navy.jpg',
+                'Темно-зеленый': 'images/women/shirt/shirt-green.jpg'
             },
             gallery: {
                 'Черный': [
-                    'images/women/shirt-black-1.jpg',
-                    'images/women/shirt-black-2.jpg',
-                    'images/women/shirt-black-3.jpg'
+                    'images/women/shirt/shirt-black-1.jpg',
+                    'images/women/shirt/shirt-black-2.jpg',
+                    'images/women/shirt/shirt-black-3.jpg'
                 ],
                 'Темно-синий': [
-                    'images/women/shirt-navy-1.jpg',
-                    'images/women/shirt-navy-2.jpg',
-                    'images/women/shirt-navy-3.jpg'
+                    'images/women/shirt/shirt-navy-1.jpg',
+                    'images/women/shirt/shirt-navy-2.jpg',
+                    'images/women/shirt/shirt-navy-3.jpg'
                 ],
                 'Темно-зеленый': [
-                    'images/women/shirt-green-1.jpg',
-                    'images/women/shirt-green-2.jpg',
-                    'images/women/shirt-green-3.jpg'
+                    'images/women/shirt/shirt-green-1.jpg',
+                    'images/women/shirt/shirt-green-2.jpg',
+                    'images/women/shirt/shirt-green-3.jpg'
                 ]
             },
             sizes: ['Оверсайз'],
@@ -359,9 +359,9 @@ const products = {
             description: 'Стильный вафельный халат в стиле Бохо.',
             price: 5499,
             image: {
-                'Белый': 'images/women/robe-boho-white.jpg',
-                'Синий': 'images/women/robe-boho-blue.jpg',
-                'Шоколад': 'images/women/robe-boho-chocolate.jpg'
+                'Белый': 'images/women/robe-boho/robe-white.jpg',
+                'Синий': 'images/women/robe-boho/robe-blue.jpg',
+                'Шоколад': 'images/women/robe-boho/robe-chocolate.jpg'
             },
             sizes: ['M-L', 'XL', 'XXL'],
             colors: [
@@ -377,7 +377,7 @@ const products = {
             description: 'Элегантный халат из смесовой ткани полулен.',
             price: 4999,
             image: {
-                'Бежевый': 'images/women/robe-linen-beige.jpg'
+                'Бежевый': 'images/women/robe-linen/robe-linen-beige.jpg'
             },
             sizes: ['L', 'XL'],
             colors: [
@@ -391,7 +391,7 @@ const products = {
             description: 'Практичный и стильный дождевик из ткани Oxford.',
             price: 4999,
             image: {
-                'Бежевый': 'images/women/raincoat-beige.jpg'
+                'Бежевый': 'images/women/raincoat/raincoat-beige.jpg'
             },
             sizes: ['Оверсайз'],
             colors: [
@@ -407,9 +407,9 @@ const products = {
             description: 'Классическая футболка из премиального хлопка.',
             price: 3499,
             image: {
-                'Черный': 'images/men/tshirt-black.jpg',
-                'Белый': 'images/men/tshirt-white.jpg',
-                'Зеленый': 'images/men/tshirt-green.jpg'
+                'Черный': 'images/men/tshirt/tshirt-black.jpg',
+                'Белый': 'images/men/tshirt/tshirt-white.jpg',
+                'Зеленый': 'images/men/tshirt/tshirt-green.jpg'
             },
             sizes: ['L', 'XL'],
             colors: [
@@ -425,9 +425,9 @@ const products = {
             description: 'Стильный вафельный халат в стиле Бохо.',
             price: 5499,
             image: {
-                'Белый': 'images/men/robe-boho-white.jpg',
-                'Синий': 'images/men/robe-boho-blue.jpg',
-                'Шоколад': 'images/men/robe-boho-chocolate.jpg'
+                'Белый': 'images/men/robe-boho/robe-white.jpg',
+                'Синий': 'images/men/robe-boho/robe-blue.jpg',
+                'Шоколад': 'images/men/robe-boho/robe-chocolate.jpg'
             },
             sizes: ['M-L', 'XL', 'XXL'],
             colors: [
@@ -445,7 +445,7 @@ const products = {
             description: 'Комплект из двух вафельных полотенец.',
             price: 650,
             image: {
-                'Белый': 'images/home/towels-white.jpg'
+                'Белый': 'images/home/towels/towels-white.jpg'
             },
             sizes: ['45х75'],
             colors: [
@@ -459,7 +459,7 @@ const products = {
             description: 'Элегантная скатерть из смесовой ткани полулен.',
             price: 4199,
             image: {
-                'Бежевый': 'images/home/tablecloth-beige.jpg'
+                'Бежевый': 'images/home/tablecloth/tablecloth-beige.jpg'
             },
             sizes: ['150х250'],
             colors: [
@@ -473,7 +473,7 @@ const products = {
             description: 'Комплект из 6 льняных салфеток в подарочной упаковке.',
             price: 3599,
             image: {
-                'Белый': 'images/home/napkins-white.jpg'
+                'Белый': 'images/home/napkins/napkins-white.jpg'
             },
             sizes: ['45х45'],
             colors: [
