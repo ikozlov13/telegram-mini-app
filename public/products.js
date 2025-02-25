@@ -145,70 +145,53 @@ async function checkout() {
 }
 
 function createProductCard(product) {
-    const defaultColor = product.colors[0].name;
-    const defaultImage = product.image[defaultColor];
-    const defaultGallery = product.gallery?.[defaultColor] || [];
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.dataset.productId = product.id;
 
-    return `
-        <div class="product-card" data-product-id="${product.id}">
-            <div class="product-image-container">
-                <div class="product-gallery">
-                    <img src="${defaultImage}" alt="${product.name}" class="product-image main-image">
-                    <div class="gallery-thumbs">
-                        <button class="gallery-nav prev">❮</button>
-                        <div class="thumbs-container">
-                            <img src="${defaultImage}" class="thumb active" data-image="${defaultImage}">
-                            ${defaultGallery.map(img => `
-                                <img src="${img}" class="thumb" data-image="${img}">
-                            `).join('')}
-                        </div>
-                        <button class="gallery-nav next">❯</button>
-                    </div>
-                </div>
-                <div class="product-badges">
-                    ${product.isNew ? '<span class="badge new">New</span>' : ''}
-                    ${product.discount ? `<span class="badge discount">-${product.discount}%</span>` : ''}
-                </div>
-            </div>
-            <div class="product-info">
-                <h2 class="product-title">${product.name}</h2>
-                <p class="product-description">${product.description}</p>
-                <p class="product-composition">Состав: ${product.composition}</p>
-                
-                <div class="product-options">
-                    <div class="size-selector">
-                        <label>Размер:</label>
-                        <div class="size-options">
-                            ${product.sizes.map(size => `
-                                <button class="size-option" data-size="${size}">${size}</button>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
+    // Добавляем информацию о товаре
+    card.innerHTML = `
+        <div class="product-image-container">
+            <img src="${Object.values(product.image)[0]}" alt="${product.name}" class="product-image">
+        </div>
+        <div class="product-info">
+            <h2 class="product-title">${product.name}</h2>
+            <p class="product-description">${product.description}</p>
+            <div class="product-price">${product.price.toLocaleString()} ₽</div>
+            
+            <div class="product-options">
+                ${product.colors.length > 1 ? `
                     <div class="color-selector">
-                        <label>Цвет:</label>
+                        <span>Цвет:</span>
                         <div class="color-options">
                             ${product.colors.map(color => `
-                                <div class="color-option ${color.name === defaultColor ? 'selected' : ''}" 
-                                     data-color="${color.name}"
-                                     data-image="${product.image[color.name]}"
+                                <div class="color-option" 
                                      style="background-color: ${color.code}"
+                                     data-color="${color.name}"
                                      title="${color.name}">
                                 </div>
                             `).join('')}
                         </div>
                     </div>
-                </div>
+                ` : ''}
                 
-                <div class="product-footer">
-                    <p class="product-price">${product.price.toLocaleString()} ₽</p>
-                    <button class="add-to-cart-btn" data-product-id="${product.id}">
-                        В корзину
-                    </button>
-                </div>
+                ${product.sizes.length > 1 ? `
+                    <div class="size-selector">
+                        <span>Размер:</span>
+                        ${product.sizes.map(size => `
+                            <div class="size-option" data-size="${size}">${size}</div>
+                        `).join('')}
+                    </div>
+                ` : `<input type="hidden" class="selected-size" value="${product.sizes[0]}">`}
             </div>
+
+            <button class="add-to-cart-btn">
+                ${product.sizes.length > 1 ? 'Выбрать размер' : 'Добавить в корзину'}
+            </button>
         </div>
     `;
+
+    return card;
 }
 
 const products = {
