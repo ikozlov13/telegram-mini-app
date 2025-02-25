@@ -1,12 +1,31 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const TelegramBot = require('node-telegram-bot-api');
+const compression = require('compression');
 const path = require('path');
+const TelegramBot = require('node-telegram-bot-api');
 
 const app = express();
+
+// Включаем сжатие GZIP
+app.use(compression());
+
+// Настройка CORS
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Улучшенное кэширование статических файлов
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '1d',
+    etag: true,
+    lastModified: true,
+    setHeaders: (res, path) => {
+        // Особые правила для изображений
+        if (path.endsWith('.jpg') || path.endsWith('.png') || path.endsWith('.webp')) {
+            res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 год
+        }
+    }
+}));
+
 app.use(express.json()); // Поддержка JSON-запросов
 
 // Главная страница

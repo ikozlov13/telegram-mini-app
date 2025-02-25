@@ -30,12 +30,12 @@ function renderCart() {
         <div class="cart-items">
             ${cart.map((item, index) => `
                 <div class="cart-item" data-index="${index}" data-product-id="${item.id}">
-                    <img src="${item.image[item.color]}" alt="${item.name}" class="cart-item-image">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
                     <div class="cart-item-details">
                         <h3>${item.name}</h3>
                         <p>Размер: ${item.size}</p>
                         <p>Цвет: ${item.color}</p>
-                        <p>Цена: ${item.price} ₽</p>
+                        <p>Цена: ${item.price.toLocaleString()} ₽</p>
                         <div class="quantity-controls">
                             <button class="quantity-minus">-</button>
                             <span>${item.quantity}</span>

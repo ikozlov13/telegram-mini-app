@@ -88,86 +88,82 @@ function getQueryParam(param) {
 }
 
 // Функция для добавления товара в корзину
-function addToCart(product, size, color) {
+async function addToCart(product, size, color) {
     try {
         // Анимация кнопки
         const button = document.querySelector(`[data-product-id="${product.id}"] .add-to-cart-btn`);
         button.classList.add('adding');
-        setTimeout(() => button.classList.remove('adding'), 300);
+        
+        // Меняем текст и цвет кнопки
+        button.style.backgroundColor = '#4CAF50';
+        button.textContent = 'Перейти в корзину';
+        
+        // Меняем функционал кнопки
+        button.onclick = () => {
+            window.location.href = 'cart.html';
+        };
 
-        // Создаем летящий элемент
+        // Получаем оптимальный путь для изображения
+        const imagePath = await getOptimalImagePath(product.gallery[color][0]);
+
+        // Добавляем товар в корзину
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingItem = cart.find(item => 
+            item.id === product.id && 
+            item.size === size && 
+            item.color === color
+        );
+
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                size: size,
+                color: color,
+                image: imagePath,
+                quantity: 1
+            });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Анимация добавления в корзину
         const productImage = document.querySelector(`[data-product-id="${product.id}"] .product-image`);
         const cartButton = document.querySelector('.cart-button');
         
         if (productImage && cartButton) {
             const flyingItem = document.createElement('img');
-            flyingItem.src = product.gallery[color][0];
+            flyingItem.src = imagePath;
             flyingItem.classList.add('flying-item');
             
-            // Начальная позиция (у товара)
             const startRect = productImage.getBoundingClientRect();
             flyingItem.style.top = startRect.top + 'px';
             flyingItem.style.left = startRect.left + 'px';
             
             document.body.appendChild(flyingItem);
 
-            // Конечная позиция (у корзины)
             const endRect = cartButton.getBoundingClientRect();
             
-            // Запускаем анимацию в следующем кадре
             requestAnimationFrame(() => {
                 flyingItem.style.transform = 'scale(0.3)';
                 flyingItem.style.top = endRect.top + 'px';
                 flyingItem.style.left = endRect.left + 'px';
                 
-                // Удаляем элемент после анимации
                 setTimeout(() => {
                     flyingItem.remove();
-                    
-                    // Анимируем кнопку корзины
                     cartButton.classList.add('updating');
                     setTimeout(() => cartButton.classList.remove('updating'), 500);
-                    
-                    // Добавляем товар в корзину
-                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-                    const existingItem = cart.find(item => 
-                        item.id === product.id && 
-                        item.size === size && 
-                        item.color === color
-                    );
-
-                    if (existingItem) {
-                        existingItem.quantity += 1;
-                    } else {
-                        cart.push({
-                            id: product.id,
-                            name: product.name,
-                            price: product.price,
-                            size: size,
-                            color: color,
-                            image: product.gallery[color][0],
-                            quantity: 1
-                        });
-                    }
-
-                    localStorage.setItem('cart', JSON.stringify(cart));
                     updateCartButton();
-
-                    // Показываем уведомление
-                    Telegram.WebApp.showPopup({
-                        title: 'Товар добавлен в корзину',
-                        message: `${product.name} (${color}, ${size})`,
-                        buttons: [
-                            {type: 'default', text: 'Продолжить покупки'},
-                            {type: 'ok', text: 'Перейти в корзину', id: 'go_to_cart'}
-                        ]
-                    }, (buttonId) => {
-                        if (buttonId === 'go_to_cart') {
-                            window.location.href = 'cart.html';
-                        }
-                    });
                 }, 600);
             });
+        }
+
+        // Убираем MainButton Telegram
+        if (Telegram.WebApp.MainButton) {
+            Telegram.WebApp.MainButton.hide();
         }
 
     } catch (error) {
@@ -191,11 +187,8 @@ function updateCartButton() {
             cartButton.textContent = `🛒 Корзина (${totalItems})`;
         }
 
-        // Обновляем MainButton если корзина не пуста
-        if (totalItems > 0) {
-            Telegram.WebApp.MainButton.setText('Перейти в корзину');
-            Telegram.WebApp.MainButton.show();
-        } else {
+        // Убираем MainButton Telegram
+        if (Telegram.WebApp.MainButton) {
             Telegram.WebApp.MainButton.hide();
         }
     } catch (error) {
@@ -308,70 +301,169 @@ async function checkout() {
     }
 }
 
-function createProductCard(product) {
+// Функция для проверки поддержки WebP
+async function supportsWebP() {
+    if (!self.createImageBitmap) return false;
+    
+    const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+    const blob = await fetch(webpData).then(r => r.blob());
+    
+    return createImageBitmap(blob).then(() => true, () => false);
+}
+
+// Функция для получения оптимального пути к изображению
+async function getOptimalImagePath(imagePath) {
+    const supportsWebp = await supportsWebP();
+    if (supportsWebp) {
+        return imagePath.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+    }
+    return imagePath;
+}
+
+// Функция предварительной загрузки с прогрессивной загрузкой
+async function preloadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        
+        // Сначала загружаем маленькую версию
+        img.src = src.replace(/\.(jpg|jpeg|png|webp)$/i, '-thumb.$1');
+        
+        // Затем загружаем полную версию
+        const fullImg = new Image();
+        fullImg.onload = () => {
+            img.src = fullImg.src;
+            resolve(fullImg);
+        };
+        fullImg.src = src;
+    });
+}
+
+// Обновляем функцию создания карточки товара
+async function createProductCard(product) {
     const card = document.createElement('div');
     card.className = 'product-card';
     card.dataset.productId = product.id;
 
-    // Используем первое фото из галереи для основного изображения
-    const firstColor = product.colors[0].name;
-    const mainImage = product.gallery[firstColor][0];
-
-    // Начинаем предзагрузку остальных изображений
-    preloadImages(product);
-
+    // Добавляем плейсхолдер
     card.innerHTML = `
         <div class="product-image-container">
-            <img src="${mainImage}" alt="${product.name}" class="product-image">
-            <div class="gallery-thumbs">
-                ${product.gallery[firstColor].map((img, index) => `
-                    <img src="${img}" 
-                         class="thumb ${index === 0 ? 'active' : ''}" 
-                         data-image="${img}"
-                         alt="${product.name} - фото ${index + 1}">
-                `).join('')}
-            </div>
-        </div>
-        <div class="product-info">
-            <h2 class="product-title">${product.name}</h2>
-            <p class="product-description">${product.description}</p>
-            <p class="product-composition">Состав: ${product.composition}</p>
-            <div class="product-price">${product.price.toLocaleString()} ₽</div>
-            
-            <div class="product-options">
-                ${product.colors.length > 1 ? `
-                    <div class="color-selector">
-                        <span>Цвет:</span>
-                        <div class="color-options">
-                            ${product.colors.map(color => `
-                                <div class="color-option" 
-                                     style="background-color: ${color.code}"
-                                     data-color="${color.name}"
-                                     title="${color.name}">
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : ''}
-                
-                ${product.sizes.length > 1 ? `
-                    <div class="size-selector">
-                        <span>Размер:</span>
-                        ${product.sizes.map(size => `
-                            <div class="size-option" data-size="${size}">${size}</div>
-                        `).join('')}
-                    </div>
-                ` : `<input type="hidden" class="selected-size" value="${product.sizes[0]}">`}
-            </div>
-
-            <button class="add-to-cart-btn">
-                ${product.sizes.length > 1 ? 'Выбрать размер' : 'Добавить в корзину'}
-            </button>
+            <div class="image-placeholder"></div>
         </div>
     `;
 
-    // Добавляем обработчики событий
-    addProductEventListeners(card, product);
+    // Получаем оптимальные пути для изображений
+    const firstColor = product.colors[0].name;
+    const mainImagePath = await getOptimalImagePath(product.gallery[firstColor][0]);
+
+    // Загружаем изображение
+    try {
+        const img = new Image();
+        img.onload = () => {
+            const container = card.querySelector('.product-image-container');
+            container.innerHTML = '';
+            img.className = 'product-image fade-in';
+            container.appendChild(img);
+        };
+        img.src = mainImagePath;
+    } catch (error) {
+        console.error('Ошибка загрузки изображения:', error);
+    }
+
+    // Добавляем остальную информацию о товаре
+    const infoContainer = document.createElement('div');
+    infoContainer.className = 'product-info';
+    infoContainer.innerHTML = `
+        <h2 class="product-title">${product.name}</h2>
+        <p class="product-description">${product.description}</p>
+        <div class="product-price">${product.price.toLocaleString()} ₽</div>
+        
+        <div class="product-options">
+            ${product.colors.length > 1 ? `
+                <div class="color-selector">
+                    <span>Цвет:</span>
+                    <div class="color-options">
+                        ${product.colors.map(color => `
+                            <div class="color-option" 
+                                 style="background-color: ${color.code}"
+                                 data-color="${color.name}"
+                                 title="${color.name}">
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+            
+            ${product.sizes.length > 1 ? `
+                <div class="size-selector">
+                    <span>Размер:</span>
+                    ${product.sizes.map(size => `
+                        <div class="size-option" data-size="${size}">${size}</div>
+                    `).join('')}
+                </div>
+            ` : `<input type="hidden" class="selected-size" value="${product.sizes[0]}">`}
+        </div>
+
+        <button class="add-to-cart-btn" style="background-color: #2196F3">
+            ${product.sizes.length > 1 ? 'Выбрать размер' : 'Добавить в корзину'}
+        </button>
+    `;
+
+    card.appendChild(infoContainer);
+
+    // Проверяем, есть ли товар в корзине
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const inCart = cart.some(item => item.id === product.id);
+
+    // Обновляем состояние кнопки
+    const buttonText = inCart ? 'Перейти в корзину' : (product.sizes.length > 1 ? 'Выбрать размер' : 'Добавить в корзину');
+    const buttonColor = inCart ? '#4CAF50' : '#2196F3';
+
+    infoContainer.innerHTML = `
+        <h2 class="product-title">${product.name}</h2>
+        <p class="product-description">${product.description}</p>
+        <div class="product-price">${product.price.toLocaleString()} ₽</div>
+        
+        <div class="product-options">
+            ${product.colors.length > 1 ? `
+                <div class="color-selector">
+                    <span>Цвет:</span>
+                    <div class="color-options">
+                        ${product.colors.map(color => `
+                            <div class="color-option" 
+                                 style="background-color: ${color.code}"
+                                 data-color="${color.name}"
+                                 title="${color.name}">
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+            
+            ${product.sizes.length > 1 ? `
+                <div class="size-selector">
+                    <span>Размер:</span>
+                    ${product.sizes.map(size => `
+                        <div class="size-option" data-size="${size}">${size}</div>
+                    `).join('')}
+                </div>
+            ` : `<input type="hidden" class="selected-size" value="${product.sizes[0]}">`}
+        </div>
+
+        <button class="add-to-cart-btn" style="background-color: ${buttonColor}">
+            ${buttonText}
+        </button>
+    `;
+
+    // Добавляем обработчик для кнопки
+    const button = infoContainer.querySelector('.add-to-cart-btn');
+    if (inCart) {
+        button.onclick = () => {
+            window.location.href = 'cart.html';
+        };
+    }
 
     return card;
 }
