@@ -264,12 +264,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Функция загрузки товаров
 function loadProducts(category) {
+    console.log('Доступные категории:', Object.keys(products));
+    console.log('Текущая категория:', category);
     console.log('Загрузка товаров для категории:', category);
     
-    const productsContainer = document.getElementById('products-container');
-    if (!productsContainer) {
-        console.error('Контейнер products-container не найден');
+    // Проверяем готовность DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => loadProducts(category));
         return;
+    }
+
+    // Получаем или создаем контейнер
+    let productsContainer = document.getElementById('products-container');
+    if (!productsContainer) {
+        console.log('Создаем новый контейнер products-container');
+        productsContainer = document.createElement('div');
+        productsContainer.id = 'products-container';
+        document.body.appendChild(productsContainer);
     }
 
     const categoryProducts = products[category];
@@ -279,27 +290,46 @@ function loadProducts(category) {
         return;
     }
 
-    // Скрываем категории
-    const categoriesContainer = document.querySelector('.categories');
-    if (categoriesContainer) {
-        categoriesContainer.style.display = 'none';
+    try {
+        // Очищаем и заполняем контейнер товаров
+        productsContainer.innerHTML = `
+            <button class="back-to-categories" onclick="backToCategories()">
+                ← Назад к категориям
+            </button>
+            <div class="products-grid"></div>
+        `;
+
+        const productsGrid = productsContainer.querySelector('.products-grid');
+        if (!productsGrid) {
+            throw new Error('Не удалось создать .products-grid');
+        }
+
+        // Скрываем категории
+        const categoriesContainer = document.querySelector('.categories');
+        if (categoriesContainer) {
+            categoriesContainer.style.display = 'none';
+        }
+
+        // Добавляем товары
+        categoryProducts.forEach(product => {
+            try {
+                const card = createProductCard(product);
+                productsGrid.appendChild(card);
+            } catch (cardError) {
+                console.error('Ошибка при создании карточки товара:', cardError);
+                // Продолжаем выполнение для остальных товаров
+            }
+        });
+
+    } catch (error) {
+        console.error('Ошибка при загрузке товаров:', error);
+        productsContainer.innerHTML = `
+            <div class="error-message">
+                <p>Произошла ошибка при загрузке товаров.</p>
+                <button onclick="backToCategories()">Вернуться к категориям</button>
+            </div>
+        `;
     }
-
-    // Очищаем и заполняем контейнер товаров
-    productsContainer.innerHTML = `
-        <button class="back-to-categories" onclick="backToCategories()">
-            ← Назад к категориям
-        </button>
-        <div class="products-grid"></div>
-    `;
-
-    const productsGrid = productsContainer.querySelector('.products-grid');
-    
-    // Добавляем товары
-    categoryProducts.forEach(product => {
-        const card = createProductCard(product);
-        productsGrid.appendChild(card);
-    });
 }
 
 // Функция возврата к категориям
@@ -832,3 +862,7 @@ function initializeGallery(productCard) {
         btn.addEventListener('click', () => updateGallery(1));
     });
 }
+
+window.addEventListener('error', (event) => {
+    console.error('Ошибка загрузки ресурса:', event.target);
+}, true);
