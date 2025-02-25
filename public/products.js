@@ -219,21 +219,26 @@ const products = {
             description: 'Стильная футболка оверсайз из премиального хлопка. Идеально для повседневной носки.',
             price: 3499,
             image: {
-                'Черный': 'images/women/tshirt/tshirt-black.jpg',
-                'Белый': 'images/women/tshirt/tshirt-white.jpg',
+                'Черный': 'images/women/tshirt/tshirt-black-1.jpg',  // Используем первое фото как основное
+                'Белый': 'images/women/tshirt/tshirt-white-1.jpg',
                 'Фуксия': 'images/women/tshirt/tshirt-fuchsia-1.jpg',
-                'Зеленый': 'images/women/tshirt/tshirt-green.jpg'
+                'Зеленый': 'images/women/tshirt/tshirt-green-1.jpg'
             },
             gallery: {
                 'Черный': [
                     'images/women/tshirt/tshirt-black-1.jpg',
                     'images/women/tshirt/tshirt-black-2.jpg',
-                    'images/women/tshirt/tshirt-black-3.jpg'
+                    'images/women/tshirt/tshirt-black-3.jpg',
+                    'images/women/tshirt/tshirt-black-4.jpg',
+                    'images/women/tshirt/tshirt-black-5.jpg'
                 ],
                 'Белый': [
                     'images/women/tshirt/tshirt-white-1.jpg',
                     'images/women/tshirt/tshirt-white-2.jpg',
-                    'images/women/tshirt/tshirt-white-3.jpg'
+                    'images/women/tshirt/tshirt-white-3.jpg',
+                    'images/women/tshirt/tshirt-white-4.jpg',
+                    'images/women/tshirt/tshirt-white-5.jpg',
+                    'images/women/tshirt/tshirt-white-6.jpg'
                 ],
                 'Фуксия': [
                     'images/women/tshirt/tshirt-fuchsia-1.jpg',
@@ -246,7 +251,10 @@ const products = {
                 'Зеленый': [
                     'images/women/tshirt/tshirt-green-1.jpg',
                     'images/women/tshirt/tshirt-green-2.jpg',
-                    'images/women/tshirt/tshirt-green-3.jpg'
+                    'images/women/tshirt/tshirt-green-3.jpg',
+                    'images/women/tshirt/tshirt-green-4.jpg',
+                    'images/women/tshirt/tshirt-green-5.jpg',
+                    'images/women/tshirt/tshirt-green-6.jpg'
                 ]
             },
             sizes: ['Оверсайз'],
