@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
+        img-src 'self' data:; /* Разрешаем изображения с текущего домена и data URI */
         script-src 'self' https://telegram.org 'nonce-1234';
         style-src 'self' 'unsafe-inline';
-        img-src 'self' data: blob:;
         connect-src 'self' https://telegram-mini-app-zog6.onrender.com;
     ">
     <title>Магазин одежды</title>
