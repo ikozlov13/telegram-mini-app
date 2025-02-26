@@ -10,18 +10,24 @@
     <script src="cart.js" defer></script>
 </head>
 <body>
-    <div class="cart-button-container">
-        <button class="cart-button" id="cart-button">
-            🏠 На главную
-        </button>
-        <button class="back-button" id="back-button">
-            ↩️ Назад
-        </button>
-    </div>
-    <h1>Корзина</h1>
-    <div id="cart-container">
-        <p>Ваша корзина пуста.</p> <!-- Сообщение о пустой корзине -->
-    </div>
-    <button id="checkout-button" class="checkout-btn">Оформить заказ</button>
+    <header>
+        <div class="cart-button-container">
+            <button class="cart-button" id="cart-button">
+                🏠 На главную
+            </button>
+            <button class="back-button" id="back-button">
+                ↩️ Назад
+            </button>
+        </div>
+        <h1>Корзина</h1>
+    </header>
+
+    <main>
+        <section id="cart-container">
+            <p>Ваша корзина пуста.</p> <!-- Сообщение о пустой корзине -->
+        </section>
+
+        <button id="checkout-button" class="checkout-btn">Оформить заказ</button>
+    </main>
 </body>
 </html>

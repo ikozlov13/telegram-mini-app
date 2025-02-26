@@ -67,6 +67,7 @@ bot.onText(/\/start/, (msg) => {
 
 // Обработка данных от Mini App
 app.post('/webapp-data', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
     const { chat_id, data } = req.body;
     if (chat_id && data) {
         bot.sendMessage(chat_id, "Заказ получен! Мы свяжемся с вами для подтверждения.");

@@ -8,45 +8,43 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="cart-button-container">
-        <button class="cart-button" id="cart-button">
-            🛒 Корзина
-        </button>
-    </div>
-    <h1>Каталог товаров</h1>
-    <div class="categories">
-        <div class="category" id="men-category">
-            <h2>Мужская одежда</h2>
+    <header>
+        <h1>Каталог товаров</h1>
+        <div class="cart-button-container">
+            <button class="cart-button" id="cart-button">
+                🛒 Корзина (<span id="cart-count">0</span>)
+            </button>
         </div>
-        <div class="category" id="women-category">
-            <h2>Женская одежда</h2>
-        </div>
-        <div class="category" id="home-category">
-            <h2>Домашний текстиль</h2>
-        </div>
-    </div>
+    </header>
 
-    <!-- Добавляем контейнер для товаров -->
-    <div id="products-container"></div>
+    <main>
+        <section class="categories">
+            <div class="category" id="men-category">
+                <h2>Мужская одежда</h2>
+            </div>
+            <div class="category" id="women-category">
+                <h2>Женская одежда</h2>
+            </div>
+            <div class="category" id="home-category">
+                <h2>Домашний текстиль</h2>
+            </div>
+        </section>
 
-    <!-- Скрипты добавляем в конец body -->
+        <section id="products-container" class="products-container">
+            <!-- Товары будут загружены сюда -->
+        </section>
+    </main>
+
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="/products.js"></script>
+    <script src="/scripts/products.js"></script>
     <script>
-        // Ждем полной загрузки DOM
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM загружен');
-            
-            // Проверяем наличие элементов
+
             const productsContainer = document.getElementById('products-container');
             const cartButton = document.getElementById('cart-button');
             const categories = document.querySelectorAll('.category');
-            
-            console.log('products-container найден:', !!productsContainer);
-            console.log('cart-button найден:', !!cartButton);
-            console.log('количество категорий:', categories.length);
 
-            // Инициализируем обработчики только после проверки
             if (cartButton) {
                 cartButton.onclick = () => window.location.href = 'cart.html';
             }
