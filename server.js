@@ -43,6 +43,8 @@ if (!process.env.TELEGRAM_BOT_TOKEN) {
     process.exit(1);
 }
 
+console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN);
+
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
 
 // Команда /start для бота
