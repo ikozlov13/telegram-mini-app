@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config(); // Только для локального развития
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
@@ -34,22 +34,16 @@ app.get('/', (req, res) => {
 });
 
 // Запускаем сервер
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-   console.log(`Server is running on port ${PORT}`);
-});
+const port = process.env.PORT || 3000;
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PORT:', port);
 
-// Подключаем Telegram Bot API
-const token = process.env.TELEGRAM_BOT_TOKEN;
-const adminChatId = process.env.ADMIN_CHAT_ID; // ID администратора для получения заказов
-console.log("TELEGRAM_BOT_TOKEN:", token); // Выводим токен в консоль
-
-if (!token) {
-    console.error("Ошибка: TELEGRAM_BOT_TOKEN не найден");
+if (!process.env.TELEGRAM_BOT_TOKEN) {
+    console.error('❌ TELEGRAM_BOT_TOKEN не найден!');
     process.exit(1);
 }
 
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
 
 // Команда /start для бота
 bot.onText(/\/start/, (msg) => {
@@ -92,8 +86,8 @@ bot.on("message", async (msg) => {
                 `💰 Итого: ${data.total} руб.`;
 
             // Отправляем уведомление админу
-            if (adminChatId) {
-                await bot.sendMessage(adminChatId, orderText);
+            if (process.env.ADMIN_CHAT_ID) {
+                await bot.sendMessage(process.env.ADMIN_CHAT_ID, orderText);
             }
 
             // Отправляем подтверждение покупателю
