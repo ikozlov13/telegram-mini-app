@@ -194,3 +194,10 @@ function createProductCard(product) {
     card.append(h3, sizeP, compP, colorsP, priceP, button);
     return card;
 }
+
+// Загрузка товаров при инициализации
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialCategory = urlParams.get('category') || 'women'; // Замените на нужную категорию по умолчанию
+    loadProducts(initialCategory);
+});

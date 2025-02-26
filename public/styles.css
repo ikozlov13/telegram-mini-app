@@ -72,3 +72,30 @@ header {
 .checkout-btn:hover {
     background-color: #218838;
 }
+
+.product {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.product h3 {
+    margin: 0 0 0.5rem 0;
+}
+
+.product p {
+    margin: 0.25rem 0;
+}
+
+.add-to-cart {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.add-to-cart:hover {
+    background-color: #0056b3;
+}
