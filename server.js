@@ -1,4 +1,4 @@
-require('dotenv').config(); // Только для локального развития
+// require('dotenv').config(); // Удалено, так как переменные окружения уже установлены на Render
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
