@@ -169,18 +169,28 @@ function updateCartButton() {
 function createProductCard(product) {
     const card = document.createElement('div');
     card.className = 'product';
-    card.innerHTML = `
-        <h3>${product.name}</h3>
-        <p>Размер: ${Array.isArray(product.size) ? product.size.join(', ') : product.size}</p>
-        <p>Состав: ${product.composition}</p>
-        <p>Цвета: ${product.colors.join(', ')}</p>
-        <p>Цена: ${product.price} руб.</p>
-        <button class="add-to-cart" data-id="${product.id}">Добавить в корзину</button>
-    `;
+    
+    // Создаем элементы через DOM API
+    const h3 = document.createElement('h3');
+    h3.textContent = product.name;
+    
+    const sizeP = document.createElement('p');
+    sizeP.textContent = `Размер: ${Array.isArray(product.size) ? product.size.join(', ') : product.size}`;
+    
+    const compP = document.createElement('p');
+    compP.textContent = `Состав: ${product.composition}`;
+    
+    const colorsP = document.createElement('p');
+    colorsP.textContent = `Цвета: ${product.colors.join(', ')}`;
+    
+    const priceP = document.createElement('p');
+    priceP.textContent = `Цена: ${product.price} руб.`;
+    
+    const button = document.createElement('button');
+    button.className = 'add-to-cart';
+    button.dataset.id = product.id;
+    button.textContent = 'Добавить в корзину';
+    
+    card.append(h3, sizeP, compP, colorsP, priceP, button);
     return card;
-}
-
-// Удаляем проблемную функцию supportsWebP и связанный код
-async function getOptimalImagePath(basePath) {
-    return `${basePath}.webp`; // Просто возвращаем .webp без проверки
 }

@@ -72,3 +72,12 @@ header {
 .checkout-btn:hover {
     background-color: #218838;
 }
+
+// Добавляем стили для non-js окружения
+.no-js-warning {
+    display: none;
+}
+
+.no-js .no-js-warning {
+    display: block;
+}

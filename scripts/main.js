@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const productsContainer = document.getElementById('products-container');
+    if (!productsContainer) return;
+
     const cartButton = document.getElementById('cart-button');
     const categories = document.querySelectorAll('.category');
 
@@ -21,4 +23,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const initialCategory = urlParams.get('category') || 'women';
     loadProducts(initialCategory);
-}); 
+
+    const cartContainer = document.getElementById('cart-container');
+    if (!cartContainer) return;
+});
+
+function removeItemFromCart(itemId) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = cart.filter(item => item.id !== itemId);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCounter();
+}
+
+if (!cartContainer) return; 

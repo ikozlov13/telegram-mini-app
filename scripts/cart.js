@@ -9,14 +9,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Отображаем товары в корзине
     if (cart.length > 0) {
-        cartContainer.innerHTML = cart.map(item => `
-            <div class="cart-item">
-                <h3>${item.name}</h3>
-                <p>Количество: ${item.quantity}</p>
-                <p>Цена: ${item.price * item.quantity} руб.</p>
-                <button class="remove-item" data-id="${item.id}">Удалить</button>
-            </div>
-        `).join('');
+        cartContainer.innerHTML = ''; // Очищаем контейнер
+        cart.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'cart-item';
+            
+            const h3 = document.createElement('h3');
+            h3.textContent = item.name;
+            
+            const quantityP = document.createElement('p');
+            quantityP.textContent = `Количество: ${item.quantity}`;
+            
+            const priceP = document.createElement('p');
+            priceP.textContent = `Цена: ${item.price * item.quantity} руб.`;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-item';
+            removeBtn.dataset.id = item.id;
+            removeBtn.textContent = 'Удалить';
+            
+            itemDiv.append(h3, quantityP, priceP, removeBtn);
+            cartContainer.appendChild(itemDiv);
+        });
     } else {
         cartContainer.innerHTML = '<p>Ваша корзина пуста.</p>';
     }
@@ -45,10 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Обработчик для удаления товара
     document.querySelectorAll('.remove-item').forEach(button => {
-        button.onclick = function() {
-            const itemId = this.getAttribute('data-id');
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.id;
             removeItemFromCart(itemId);
-        };
+            this.closest('.cart-item').remove(); // Удаляем элемент без перезагрузки
+        });
     });
 });
 
@@ -57,7 +72,7 @@ function removeItemFromCart(itemId) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     cart = cart.filter(item => item.id !== itemId);
     localStorage.setItem('cart', JSON.stringify(cart));
-    window.location.reload(); // Перезагружаем страницу
+    updateCartCounter(); // Добавляем обновление счетчика
 }
 
 // Функция для отправки заказа на сервер
