@@ -14,17 +14,7 @@ app.use(compression());
 app.use(cors());
 
 // Улучшенное кэширование статических файлов
-app.use(express.static(path.join(__dirname, 'public'), {
-    maxAge: '1d',
-    etag: true,
-    lastModified: true,
-    setHeaders: (res, path) => {
-        // Особые правила для изображений
-        if (path.endsWith('.jpg') || path.endsWith('.png') || path.endsWith('.webp')) {
-            res.setHeader('Cache-Control', 'public, max-age=31536000'); // 1 год
-        }
-    }
-}));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json()); // Поддержка JSON-запросов
 
