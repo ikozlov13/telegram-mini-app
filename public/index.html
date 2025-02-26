@@ -33,18 +33,28 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="/products.js"></script>
     <script>
-        // Инициализация после загрузки страницы
-        window.onload = function() {
-            // Обработчик для кнопки корзины
+        // Ждем полной загрузки DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM загружен');
+            
+            // Проверяем наличие элементов
+            const productsContainer = document.getElementById('products-container');
             const cartButton = document.getElementById('cart-button');
+            const categories = document.querySelectorAll('.category');
+            
+            console.log('products-container найден:', !!productsContainer);
+            console.log('cart-button найден:', !!cartButton);
+            console.log('количество категорий:', categories.length);
+
+            // Инициализируем обработчики только после проверки
             if (cartButton) {
                 cartButton.onclick = () => window.location.href = 'cart.html';
             }
 
-            // Добавляем обработчики для категорий
-            document.querySelectorAll('.category').forEach(category => {
+            categories.forEach(category => {
                 category.onclick = function() {
-                    const categoryId = this.id.split('-')[0]; // men, women, home
+                    const categoryId = this.id.split('-')[0];
+                    console.log('Клик по категории:', categoryId);
                     loadProducts(categoryId);
                 };
             });
@@ -53,7 +63,12 @@
             if (typeof updateCartButton === 'function') {
                 updateCartButton();
             }
-        };
+
+            // Загружаем начальную категорию
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialCategory = urlParams.get('category') || 'women';
+            loadProducts(initialCategory);
+        });
     </script>
 </body>
 </html>

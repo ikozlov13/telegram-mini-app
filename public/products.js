@@ -264,33 +264,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Функция загрузки товаров
 function loadProducts(category) {
-    console.log('Доступные категории:', Object.keys(products));
-    console.log('Текущая категория:', category);
-    console.log('Загрузка товаров для категории:', category);
+    console.log('Начало загрузки товаров для категории:', category);
     
     // Проверяем готовность DOM
     if (document.readyState === 'loading') {
+        console.log('DOM еще загружается, добавляем слушатель');
         document.addEventListener('DOMContentLoaded', () => loadProducts(category));
         return;
     }
 
-    // Получаем или создаем контейнер
-    let productsContainer = document.getElementById('products-container');
+    console.log('DOM готов, продолжаем загрузку');
+
+    // Получаем контейнер
+    const productsContainer = document.getElementById('products-container');
+    console.log('Контейнер products-container:', productsContainer);
+
     if (!productsContainer) {
-        console.log('Создаем новый контейнер products-container');
-        productsContainer = document.createElement('div');
-        productsContainer.id = 'products-container';
-        document.body.appendChild(productsContainer);
+        console.error('Контейнер products-container не найден в DOM');
+        return;
     }
 
+    // Проверяем наличие товаров в категории
     const categoryProducts = products[category];
-    if (!categoryProducts) {
-        console.error('Товары не найдены для категории:', category);
-        productsContainer.innerHTML = '<p>Товары не найдены</p>';
+    console.log('Товары в категории:', categoryProducts);
+
+    if (!categoryProducts || categoryProducts.length === 0) {
+        console.log('Товары не найдены, показываем сообщение');
+        productsContainer.innerHTML = '<p>В данной категории товары не найдены</p>';
         return;
     }
 
     try {
+        console.log('Начинаем обновление DOM');
+        
         // Очищаем и заполняем контейнер товаров
         productsContainer.innerHTML = `
             <button class="back-to-categories" onclick="backToCategories()">
@@ -300,8 +306,10 @@ function loadProducts(category) {
         `;
 
         const productsGrid = productsContainer.querySelector('.products-grid');
+        console.log('Сетка товаров создана:', !!productsGrid);
+
         if (!productsGrid) {
-            throw new Error('Не удалось создать .products-grid');
+            throw new Error('Не удалось создать сетку товаров');
         }
 
         // Скрываем категории
@@ -311,15 +319,18 @@ function loadProducts(category) {
         }
 
         // Добавляем товары
-        categoryProducts.forEach(product => {
+        console.log('Начинаем добавлять товары в сетку');
+        categoryProducts.forEach((product, index) => {
             try {
+                console.log(`Создаем карточку для товара ${index + 1}:`, product.name);
                 const card = createProductCard(product);
                 productsGrid.appendChild(card);
             } catch (cardError) {
-                console.error('Ошибка при создании карточки товара:', cardError);
-                // Продолжаем выполнение для остальных товаров
+                console.error(`Ошибка при создании карточки товара ${index + 1}:`, cardError);
             }
         });
+
+        console.log('Загрузка товаров завершена успешно');
 
     } catch (error) {
         console.error('Ошибка при загрузке товаров:', error);
