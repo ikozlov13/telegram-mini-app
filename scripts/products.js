@@ -118,27 +118,20 @@ const products = [
 function loadProducts(category) {
     const filteredProducts = products.filter(product => product.category === category);
     const productsContainer = document.getElementById('products-container');
+    
     if (!productsContainer) return;
+    
+    productsContainer.innerHTML = ''; // Очищаем контейнер
+    
+    filteredProducts.forEach(product => {
+        const productCard = createProductCard(product);
+        productsContainer.appendChild(productCard);
+    });
 
-    if (filteredProducts.length > 0) {
-        productsContainer.innerHTML = filteredProducts.map(product => `
-            <div class="product">
-                <h3>${product.name}</h3>
-                <p>Размер: ${Array.isArray(product.size) ? product.size.join(', ') : product.size}</p>
-                <p>Состав: ${product.composition}</p>
-                <p>Цвета: ${product.colors.join(', ')}</p>
-                <p>Цена: ${product.price} руб.</p>
-                <button class="add-to-cart" data-id="${product.id}">Добавить в корзину</button>
-            </div>
-        `).join('');
-    } else {
-        productsContainer.innerHTML = '<p>Товары не найдены.</p>';
-    }
-
-    // Добавляем обработчики для кнопок "Добавить в корзину"
+    // Добавляем обработчики для кнопок
     document.querySelectorAll('.add-to-cart').forEach(button => {
         button.onclick = function() {
-            const productId = this.getAttribute('data-id');
+            const productId = this.dataset.id;
             addToCart(productId);
         };
     });
@@ -170,4 +163,24 @@ function updateCartButton() {
     if (cartCount) {
         cartCount.textContent = cart.length;
     }
+}
+
+// Исправляем функцию createProductCard
+function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product';
+    card.innerHTML = `
+        <h3>${product.name}</h3>
+        <p>Размер: ${Array.isArray(product.size) ? product.size.join(', ') : product.size}</p>
+        <p>Состав: ${product.composition}</p>
+        <p>Цвета: ${product.colors.join(', ')}</p>
+        <p>Цена: ${product.price} руб.</p>
+        <button class="add-to-cart" data-id="${product.id}">Добавить в корзину</button>
+    `;
+    return card;
+}
+
+// Удаляем проблемную функцию supportsWebP и связанный код
+async function getOptimalImagePath(basePath) {
+    return `${basePath}.webp`; // Просто возвращаем .webp без проверки
 }

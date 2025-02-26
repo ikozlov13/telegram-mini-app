@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://telegram.org; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;">
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-eval' https://telegram.org;
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: blob:;
+        connect-src 'self' https://telegram-mini-app-zog6.onrender.com;
+    ">
     <title>Магазин одежды</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -37,36 +43,6 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="/scripts/products.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM загружен');
-
-            const productsContainer = document.getElementById('products-container');
-            const cartButton = document.getElementById('cart-button');
-            const categories = document.querySelectorAll('.category');
-
-            if (cartButton) {
-                cartButton.onclick = () => window.location.href = 'cart.html';
-            }
-
-            categories.forEach(category => {
-                category.onclick = function() {
-                    const categoryId = this.id.split('-')[0];
-                    console.log('Клик по категории:', categoryId);
-                    loadProducts(categoryId);
-                };
-            });
-
-            // Обновляем счетчик корзины
-            if (typeof updateCartButton === 'function') {
-                updateCartButton();
-            }
-
-            // Загружаем начальную категорию
-            const urlParams = new URLSearchParams(window.location.search);
-            const initialCategory = urlParams.get('category') || 'women';
-            loadProducts(initialCategory);
-        });
-    </script>
+    <script src="/scripts/main.js"></script>
 </body>
 </html>
