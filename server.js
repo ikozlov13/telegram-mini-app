@@ -47,6 +47,11 @@ console.log('TELEGRAM_BOT_TOKEN:', process.env.TELEGRAM_BOT_TOKEN);
 
 const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
 
+// Запускаем сервер
+app.listen(port, () => {
+    console.log(`Сервер запущен на порту ${port}`);
+});
+
 // Команда /start для бота
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
