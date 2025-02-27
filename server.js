@@ -1,9 +1,10 @@
-// require('dotenv').config(); // Удалено, так как переменные окружения уже установлены на Render
+// Подключаем необходимые модули
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
 const path = require('path');
 const TelegramBot = require('node-telegram-bot-api');
+require('dotenv').config(); // Подключаем переменные окружения
 
 const app = express();
 
@@ -13,10 +14,11 @@ app.use(compression());
 // Настройка CORS
 app.use(cors());
 
-// Улучшенное кэширование статических файлов
+// Обслуживание статических файлов из папки public
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.json()); // Поддержка JSON-запросов
+// Поддержка JSON-запросов
+app.use(express.json());
 
 // Главная страница
 app.get('/', (req, res) => {
